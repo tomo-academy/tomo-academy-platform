@@ -1,25 +1,48 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": ".next",
-  "env": {
-    "TOMO_ACADEMY_CHANNEL_ID": "UCt6nZjZxY7qF8X7Y5qZ9Q"
-  },
-  "routes": [
+  "buildCommand": "npm run build:css",
+  "outputDirectory": ".",
+  "installCommand": "npm install",
+  "devCommand": "npm run dev",
+  "framework": null,
+  "rewrites": [
     {
-      "src": "/api/youtube",
-      "dest": "/api/youtube.js",
-      "methods": ["GET"]
+      "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/pages/:path*",
+      "destination": "/pages/:path*"
     }
   ],
   "headers": [
     {
-      "source": "/api/youtube",
+      "source": "/api/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "s-maxage=3600, stale-while-revalidate"
+          "value": "s-maxage=3600, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/css/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/js/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
         }
       ]
     }
-  ]
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
 }
