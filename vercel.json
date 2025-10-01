@@ -1,0 +1,25 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "env": {
+    "TOMO_ACADEMY_CHANNEL_ID": "UCt6nZjZxY7qF8X7Y5qZ9Q"
+  },
+  "routes": [
+    {
+      "src": "/api/youtube",
+      "dest": "/api/youtube.js",
+      "methods": ["GET"]
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/youtube",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=3600, stale-while-revalidate"
+        }
+      ]
+    }
+  ]
+}
