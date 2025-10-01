@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Team Profiles Hub - Meet Our Expert Educators | Tomo Academy</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <meta name="description" content="Meet the dedicated educators behind Tomo Academy. Discover their expertise, achievements, and contributions to peer-to-peer learning and educational innovation." />
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom animations and styles */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(79, 70, 229, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+            }
+        }
+        
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(99, 102, 241, 0.8);
+            }
+        }
+        
+        .animate-fadeInUp {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .animate-delay-100 {
+            animation-delay: 0.1s;
+        }
+        
+        .animate-delay-200 {
+            animation-delay: 0.2s;
+        }
+        
+        .animate-delay-300 {
+            animation-delay: 0.3s;
+        }
+        
+        .animate-delay-400 {
+            animation-delay: 0.4s;
+        }
+        
+        .team-member-card {
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .team-member-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .team-member-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .filter-tag {
+            transition: all 0.2s ease;
+        }
+        
+        .filter-tag.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .modal-backdrop {
+            backdrop-filter: blur(5px);
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+        
+        .modal-content {
+            animation: fadeInUp 0.4s ease forwards;
+        }
+        
+        .skill-tag {
+            transition: all 0.2s ease;
+        }
+        
+        .skill-tag:hover {
+            transform: scale(1.05);
+        }
+        
+        .counter {
+            transition: all 0.5s ease;
+        }
+        
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+        
+        .toast-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .toast-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .toast-notification.success {
+            background-color: #10B981;
+        }
+        
+        .toast-notification.error {
+            background-color: #EF4444;
+        }
+        
+        .toast-notification.info {
+            background-color: #3B82F6;
+        }
+        
+        .availability-badge {
+            animation: pulse 2s infinite;
+        }
+        
+        .tab-button {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .tab-button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .tab-button.active::after {
+            width: 100%;
+        }
+        
+        .social-icon {
+            transition: all 0.2s ease;
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-3px);
+        }
+        
+        .search-highlight {
+            background-color: #FEF3C7;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+        
+        .lazy-image {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .lazy-image.loaded {
+            opacity: 1;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        /* Enhanced ID Card Styles */
+        .id-card-container {
+            perspective: 1000px;
+            margin: 20px auto;
+        }
+        
+        .id-card {
+            width: 400px;
+            height: 250px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 25px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            font-family: 'Space Grotesk', sans-serif;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .id-card:hover {
+            transform: rotateY(5deg) rotateX(5deg);
+            animation: glow 2s ease-in-out infinite;
+        }
+        
+        .id-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+        
+        .id-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            pointer-events: none;
+        }
+        
+        .id-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .id-card-logo {
+            font-weight: 700;
+            font-size: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .id-card-badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .id-card-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .id-card-info {
+            flex: 1;
+        }
+        
+        .id-card-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .id-card-role {
+            font-size: 16px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        .id-card-details {
+            font-size: 13px;
+            line-height: 1.6;
+            opacity: 0.8;
+        }
+        
+        .id-card-details div {
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .id-card-details i {
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+        }
+        
+        .id-card-photo-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin-left: 20px;
+        }
+        
+        .id-card-photo {
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .id-card-photo:hover {
+            transform: scale(1.05);
+        }
+        
+        .id-card-photo-container::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 15px;
+            padding: 3px;
+            background: linear-gradient(45deg, #fbbf24, #f59e0b, #d97706);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.7;
+        }
+        
+        .id-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 12px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .id-card-id {
+            font-family: 'Space Grotesk', monospace;
+            font-weight: 600;
+            letter-spacing: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .id-card-qr {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 10px;
+            padding: 5px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .id-card-qr:hover {
+            transform: scale(1.1);
+        }
+        
+        .id-card-actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .id-card-download, .id-card-share {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .id-card-download {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .id-card-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .id-card-share {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .id-card-share:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+        
+        .id-card-decoration {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+        }
+        
+        .id-card-decoration-1 {
+            width: 150px;
+            height: 150px;
+            top: -50px;
+            right: -50px;
+        }
+        
+        .id-card-decoration-2 {
+            width: 100px;
+            height: 100px;
+            bottom: -30px;
+            left: -30px;
+        }
+        
+        .id-card-decoration-3 {
+            width: 50px;
+            height: 50px;
+            top: 20px;
+            left: 20px;
+        }
+        
+        /* Holographic effect */
+        .id-card-holo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                rgba(255, 0, 255, 0.1) 0%, 
+                rgba(0, 255, 255, 0.1) 25%, 
+                rgba(255, 255, 0, 0.1) 50%, 
+                rgba(0, 255, 255, 0.1) 75%, 
+                rgba(255, 0, 255, 0.1) 100%);
+            background-size: 400% 400%;
+            animation: holo-shift 15s ease infinite;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+        }
+        
+        @keyframes holo-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Card variants */
+        .id-card.variant-tech {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+        
+        .id-card.variant-science {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+        
+        .id-card.variant-arts {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        }
+        
+        .id-card.variant-business {
+            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+        }
+    </style>
+</head>
+<body class="bg-background min-h-screen">
+    <!-- Smart Header Navigation -->
+    <header class="bg-white shadow-card sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <svg class="h-10 w-10 text-primary" viewBox="0 0 40 40" fill="currentColor">
+                            <circle cx="20" cy="20" r="18" fill="currentColor" opacity="0.1"/>
+                            <path d="M20 4C11.163 4 4 11.163 4 20s7.163 16 16 16 16-7.163 16-16S28.837 4 20 4zm0 28c-6.627 0-12-5.373-12-12S13.373 8 20 8s12 5.373 12 12-5.373 12-12 12z"/>
+                            <path d="M16 14h8v2h-3v10h-2V16h-3v-2z"/>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h1 class="text-xl font-inter font-bold text-primary">Tomo Academy</h1>
+                        <p class="text-xs text-secondary">Hub</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="homepage.html" class="text-text-secondary hover:text-primary transition-default px-3 py-2 rounded-md text-sm">Home</a>
+                        <a href="about_tomo_academy.html" class="text-text-secondary hover:text-primary transition-default px-3 py-2 rounded-md text-sm">About</a>
+                        <a href="team_profiles_hub.html" class="text-primary font-semibold px-3 py-2 rounded-md text-sm">Team</a>
+                        <a href="educational_content_gallery.html" class="text-text-secondary hover:text-primary transition-default px-3 py-2 rounded-md text-sm">Content</a>
+                        <a href="digital_id_generator.html" class="text-text-secondary hover:text-primary transition-default px-3 py-2 rounded-md text-sm">ID Generator</a>
+                        <a href="id_cards_gallery.html" class="text-text-secondary hover:text-primary transition-default px-3 py-2 rounded-md text-sm">ID Cards</a>
+                        <a href="support_resources.html" class="text-text-secondary hover:text-primary transition-default px-3 py-2 rounded-md text-sm">Support</a>
+                    </div>
+                </div>
+
+                <!-- CTA Button -->
+                <div class="hidden md:block">
+                    <a href="digital_id_generator.html" class="btn-primary">Create ID Card</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button type="button" class="text-text-secondary hover:text-primary focus:outline-none focus:text-primary transition-default" onclick="toggleMobileMenu()">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Navigation Menu -->
+            <div id="mobile-menu" class="md:hidden hidden">
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-surface rounded-lg mt-2">
+                    <a href="homepage.html" class="text-text-secondary hover:text-primary transition-default block px-3 py-2 rounded-md text-base">Home</a>
+                    <a href="about_tomo_academy.html" class="text-text-secondary hover:text-primary transition-default block px-3 py-2 rounded-md text-base">About</a>
+                    <a href="team_profiles_hub.html" class="text-primary font-semibold block px-3 py-2 rounded-md text-base">Team</a>
+                    <a href="educational_content_gallery.html" class="text-text-secondary hover:text-primary transition-default block px-3 py-2 rounded-md text-base">Content</a>
+                    <a href="digital_id_generator.html" class="text-text-secondary hover:text-primary transition-default block px-3 py-2 rounded-md text-base">ID Generator</a>
+                    <a href="id_cards_gallery.html" class="text-text-secondary hover:text-primary transition-default block px-3 py-2 rounded-md text-base">ID Cards</a>
+                    <a href="support_resources.html" class="text-text-secondary hover:text-primary transition-default block px-3 py-2 rounded-md text-base">Support</a>
+                    <div class="pt-2">
+                        <a href="digital_id_generator.html" class="btn-primary w-full text-center block">Create ID Card</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-primary-50 via-white to-secondary-50 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+            <div class="text-center">
+                <div class="inline-flex items-center px-4 py-2 bg-accent-100 text-accent-700 rounded-full text-sm font-medium mb-6 animate-fadeInUp">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    14 Expert Educators • 50,000+ Students Impacted
+                </div>
+                <h1 class="text-4xl lg:text-6xl font-inter font-bold text-text-primary mb-6 leading-tight animate-fadeInUp animate-delay-100">
+                    Meet the minds behind
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">educational innovation</span>
+                </h1>
+                <p class="text-xl text-text-secondary mb-8 leading-relaxed max-w-3xl mx-auto animate-fadeInUp animate-delay-200">
+                    Our diverse team of 14 dedicated educators, content creators, and technology innovators work together to bridge traditional learning with modern digital solutions. Each member brings unique expertise and passion for empowering students.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fadeInUp animate-delay-300">
+                    <button onclick="scrollToTeam()" class="btn-primary text-lg px-8 py-4">
+                        <i class="fas fa-users mr-2"></i>
+                        Explore Team
+                    </button>
+                    <a href="educational_content_gallery.html" class="btn-secondary text-lg px-8 py-4">
+                        <i class="fas fa-play-circle mr-2"></i>
+                        View Content
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Statistics -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+                <div class="animate-fadeInUp">
+                    <div class="text-4xl lg:text-5xl font-inter font-bold text-primary mb-2 counter" data-target="14">0</div>
+                    <div class="text-text-secondary">Expert Educators</div>
+                </div>
+                <div class="animate-fadeInUp animate-delay-100">
+                    <div class="text-4xl lg:text-5xl font-inter font-bold text-secondary mb-2 counter" data-target="250">0</div>
+                    <div class="text-text-secondary">Educational Videos</div>
+                </div>
+                <div class="animate-fadeInUp animate-delay-200">
+                    <div class="text-4xl lg:text-5xl font-inter font-bold text-accent mb-2 counter" data-target="50">0<span style="font-size: 0.6em">K+</span></div>
+                    <div class="text-text-secondary">Students Helped</div>
+                </div>
+                <div class="animate-fadeInUp animate-delay-300">
+                    <div class="text-4xl lg:text-5xl font-inter font-bold text-success mb-2 counter" data-target="15">0<span style="font-size: 0.6em">+</span></div>
+                    <div class="text-text-secondary">Subject Areas</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter & Search Section -->
+    <section id="team-section" class="py-16 bg-gradient-to-r from-primary-50 to-secondary-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl lg:text-4xl font-inter font-bold text-text-primary mb-4">
+                    Find the perfect mentor for your journey
+                </h2>
+                <p class="text-xl text-text-secondary max-w-3xl mx-auto">
+                    Filter by expertise, content type, or collaboration availability to connect with the right team member.
+                </p>
+            </div>
+
+            <!-- Search and Filter Controls -->
+            <div class="bg-white rounded-2xl shadow-card p-6 mb-12">
+                <div class="grid md:grid-cols-4 gap-4">
+                    <!-- Search Bar -->
+                    <div class="md:col-span-2">
+                        <div class="relative">
+                            <input type="text" id="searchInput" placeholder="Search by name, expertise, or subject..." class="input-field pl-12" onkeyup="filterTeam()" />
+                            <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Role Filter -->
+                    <div>
+                        <select id="roleFilter" class="input-field" onchange="filterTeam()">
+                            <option value="All Roles">All Roles</option>
+                            <option value="Content Creator">Content Creator</option>
+                            <option value="Subject Expert">Subject Expert</option>
+                            <option value="Tech Lead">Tech Lead</option>
+                            <option value="Community Manager">Community Manager</option>
+                        </select>
+                    </div>
+
+                    <!-- Subject Filter -->
+                    <div>
+                        <select id="subjectFilter" class="input-field" onchange="filterTeam()">
+                            <option value="All Subjects">All Subjects</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Chemistry">Chemistry</option>
+                            <option value="Biology">Biology</option>
+                            <option value="Engineering">Engineering</option>
+                            <option value="Business">Business</option>
+                            <option value="Psychology">Psychology</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Filter Tags -->
+                <div class="flex flex-wrap gap-2 mt-4">
+                    <button onclick="filterByAvailability('available')" class="filter-tag px-4 py-2 bg-success-100 text-success-600 rounded-full text-sm font-medium hover:bg-success-200 transition-default">
+                        <i class="fas fa-circle text-success-500 mr-1 text-xs"></i>
+                        Available for Collaboration
+                    </button>
+                    <button onclick="filterByAvailability('mentoring')" class="filter-tag px-4 py-2 bg-primary-100 text-primary-600 rounded-full text-sm font-medium hover:bg-primary-200 transition-default">
+                        <i class="fas fa-user-graduate text-primary-500 mr-1 text-xs"></i>
+                        Accepting Mentees
+                    </button>
+                    <button onclick="filterByAvailability('recent')" class="filter-tag px-4 py-2 bg-accent-100 text-accent-600 rounded-full text-sm font-medium hover:bg-accent-200 transition-default">
+                        <i class="fas fa-clock text-accent-500 mr-1 text-xs"></i>
+                        Recently Active
+                    </button>
+                    <button onclick="clearFilters()" class="filter-tag px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm font-medium hover:bg-gray-200 transition-default">
+                        <i class="fas fa-times mr-1"></i>
+                        Clear All
+                    </button>
+                </div>
+            </div>
+
+            <!-- View Toggle -->
+            <div class="flex justify-end mb-4">
+                <div class="inline-flex rounded-md shadow-sm" role="group">
+                    <button type="button" onclick="setViewMode('grid')" id="gridViewBtn" class="px-4 py-2 text-sm font-medium text-white bg-primary border border-primary rounded-l-lg hover:bg-primary-700">
+                        <i class="fas fa-th"></i>
+                    </button>
+                    <button type="button" onclick="setViewMode('list')" id="listViewBtn" class="px-4 py-2 text-sm font-medium text-text-secondary bg-white border border-gray-200 rounded-r-md hover:bg-gray-100">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Team Members Grid -->
+            <div id="teamGrid" class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Team members will be dynamically loaded here -->
+            </div>
+
+            <!-- Load More Button -->
+            <div class="text-center mt-12">
+                <button onclick="loadMoreMembers()" class="btn-secondary px-8 py-4">
+                    <i class="fas fa-plus mr-2"></i>
+                    Load More Team Members
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Collaboration Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-inter font-bold text-text-primary mb-4">
+                    Collaborative excellence in action
+                </h2>
+                <p class="text-xl text-text-secondary max-w-3xl mx-auto">
+                    Our team works together to create comprehensive educational experiences that combine expertise across multiple disciplines.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Content Creation Process -->
+                <div class="card text-center animate-fadeInUp">
+                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-video text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Content Creation</h3>
+                    <p class="text-text-secondary mb-6">Our subject experts collaborate with content creators to produce high-quality educational videos that make complex topics accessible.</p>
+                    <a href="educational_content_gallery.html" class="text-primary font-medium hover:text-primary-700 transition-default">
+                        View Our Content <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+
+                <!-- Peer Review System -->
+                <div class="card text-center animate-fadeInUp animate-delay-100">
+                    <div class="w-16 h-16 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-check-circle text-secondary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Quality Assurance</h3>
+                    <p class="text-text-secondary mb-6">Every piece of content goes through rigorous peer review to ensure accuracy, clarity, and educational effectiveness.</p>
+                    <a href="about_tomo_academy.html" class="text-secondary font-medium hover:text-secondary-700 transition-default">
+                        Learn Our Process <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+
+                <!-- Student Feedback Integration -->
+                <div class="card text-center animate-fadeInUp animate-delay-200">
+                    <div class="w-16 h-16 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-comments text-accent text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Student-Centered</h3>
+                    <p class="text-text-secondary mb-6">We actively incorporate student feedback and questions to continuously improve our educational approach and content relevance.</p>
+                    <a href="support_resources.html" class="text-accent font-medium hover:text-accent-700 transition-default">
+                        Share Feedback <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-20 bg-gradient-to-r from-primary-50 to-secondary-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl lg:text-4xl font-inter font-bold text-text-primary mb-4">
+                    What our students say
+                </h2>
+                <p class="text-xl text-text-secondary max-w-3xl mx-auto">
+                    Hear from students who have transformed their learning journey with our expert educators.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="card animate-fadeInUp">
+                    <div class="flex items-center mb-4">
+                        <div class="text-yellow-400 mr-1">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="text-sm text-text-secondary ml-2">5.0</span>
+                    </div>
+                    <p class="text-text-secondary mb-6 italic">"The team at Tomo Academy completely transformed my learning experience. Their personalized approach and expert guidance helped me excel in my studies."</p>
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face" alt="Student" class="w-10 h-10 rounded-full mr-3">
+                        <div>
+                            <div class="font-medium text-text-primary">Priya Sharma</div>
+                            <div class="text-sm text-text-secondary">Engineering Student</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="card animate-fadeInUp animate-delay-100">
+                    <div class="flex items-center mb-4">
+                        <div class="text-yellow-400 mr-1">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="text-sm text-text-secondary ml-2">5.0</span>
+                    </div>
+                    <p class="text-text-secondary mb-6 italic">"I can't thank the Tomo Academy team enough. Their innovative teaching methods and genuine care for students made all the difference in my academic journey."</p>
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="Student" class="w-10 h-10 rounded-full mr-3">
+                        <div>
+                            <div class="font-medium text-text-primary">Michael Chen</div>
+                            <div class="text-sm text-text-secondary">Computer Science Graduate</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="card animate-fadeInUp animate-delay-200">
+                    <div class="flex items-center mb-4">
+                        <div class="text-yellow-400 mr-1">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <span class="text-sm text-text-secondary ml-2">4.5</span>
+                    </div>
+                    <p class="text-text-secondary mb-6 italic">"The educators at Tomo Academy are not just teachers; they're mentors who truly care about your success. Their guidance has been invaluable."</p>
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" alt="Student" class="w-10 h-10 rounded-full mr-3">
+                        <div>
+                            <div class="font-medium text-text-primary">Emma Johnson</div>
+                            <div class="text-sm text-text-secondary">Psychology Student</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-gradient-to-r from-primary to-secondary">
+        <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl lg:text-4xl font-inter font-bold text-white mb-6">
+                Ready to connect with our expert team?
+            </h2>
+            <p class="text-xl text-primary-100 mb-8">
+                Whether you need academic support, collaboration opportunities, or want to join our community, we're here to help.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="support_resources.html" class="bg-white text-primary px-8 py-4 rounded-lg font-inter font-semibold hover:bg-primary-50 transition-default text-lg">
+                    Get Support
+                </a>
+                <a href="educational_content_gallery.html" class="border-2 border-white text-white px-8 py-4 rounded-lg font-inter font-semibold hover:bg-white hover:text-primary transition-default text-lg">
+                    Explore Content
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Brand -->
+                <div class="md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <svg class="h-8 w-8 text-primary" viewBox="0 0 40 40" fill="currentColor">
+                            <circle cx="20" cy="20" r="18" fill="currentColor" opacity="0.1"/>
+                            <path d="M20 4C11.163 4 4 11.163 4 20s7.163 16 16 16 16-7.163 16-16S28.837 4 20 4zm0 28c-6.627 0-12-5.373-12-12S13.373 8 20 8s12 5.373 12 12-5.373 12-12 12z"/>
+                            <path d="M16 14h8v2h-3v10h-2V16h-3v-2z"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-inter font-bold">Tomo Academy Hub</span>
+                    </div>
+                    <p class="text-gray-300 mb-6 max-w-md">
+                        Bridging traditional learning with modern digital identity solutions. Empowering students through innovative educational technology.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="javascript:void(0)" class="text-gray-400 hover:text-white transition-default social-icon">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="text-gray-400 hover:text-white transition-default social-icon">
+                            <i class="fab fa-youtube text-xl"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="text-gray-400 hover:text-white transition-default social-icon">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="text-gray-400 hover:text-white transition-default social-icon">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-inter font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="about_tomo_academy.html" class="text-gray-300 hover:text-white transition-default">About Us</a></li>
+                        <li><a href="team_profiles_hub.html" class="text-gray-300 hover:text-white transition-default">Our Team</a></li>
+                        <li><a href="educational_content_gallery.html" class="text-gray-300 hover:text-white transition-default">Content Gallery</a></li>
+                        <li><a href="digital_id_generator.html" class="text-gray-300 hover:text-white transition-default">ID Generator</a></li>
+                        <li><a href="id_cards_gallery.html" class="text-gray-300 hover:text-white transition-default">ID Cards</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support -->
+                <div>
+                    <h3 class="text-lg font-inter font-semibold mb-4">Support</h3>
+                    <ul class="space-y-2">
+                        <li><a href="support_resources.html" class="text-gray-300 hover:text-white transition-default">Help Center</a></li>
+                        <li><a href="support_resources.html" class="text-gray-300 hover:text-white transition-default">Contact Us</a></li>
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-white transition-default">Privacy Policy</a></li>
+                        <li><a href="javascript:void(0)" class="text-gray-300 hover:text-white transition-default">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center">
+                <p class="text-gray-400">© 2025 Tomo Academy Hub. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Member Detail Modal -->
+    <div id="memberModal" class="fixed inset-0 modal-backdrop hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-screen overflow-y-auto modal-content">
+            <div class="p-8">
+                <!-- Modal Header -->
+                <div class="flex justify-between items-start mb-6">
+                    <div class="flex items-center">
+                        <img id="modalImage" src alt class="w-20 h-20 rounded-full object-cover mr-6" />
+                        <div>
+                            <h2 id="modalName" class="text-3xl font-inter font-bold text-text-primary mb-2"></h2>
+                            <p id="modalRole" class="text-xl text-primary font-medium mb-2"></p>
+                            <div id="modalAvailability" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"></div>
+                        </div>
+                    </div>
+                    <button onclick="closeMemberModal()" class="text-gray-400 hover:text-gray-600 transition-default">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="flex border-b border-gray-200 mb-6">
+                    <button class="tab-button active px-4 py-2 font-medium text-primary" onclick="switchTab('about')">About</button>
+                    <button class="tab-button px-4 py-2 font-medium text-text-secondary" onclick="switchTab('content')">Content</button>
+                    <button class="tab-button px-4 py-2 font-medium text-text-secondary" onclick="switchTab('contact')">Contact</button>
+                    <button class="tab-button px-4 py-2 font-medium text-text-secondary" onclick="switchTab('idcard')">
+                        <i class="fas fa-id-card mr-1"></i> ID Card
+                    </button>
+                </div>
+
+                <!-- Tab Content -->
+                <div id="tabContent">
+                    <!-- About Tab -->
+                    <div id="aboutTab" class="tab-content">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <!-- Left Column -->
+                            <div>
+                                <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Biography</h3>
+                                <p id="modalBio" class="text-text-secondary mb-6"></p>
+
+                                <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Expertise</h3>
+                                <div id="modalExpertise" class="flex flex-wrap gap-2 mb-6"></div>
+
+                                <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Education</h3>
+                                <p id="modalEducation" class="text-text-secondary mb-6"></p>
+                            </div>
+
+                            <!-- Right Column -->
+                            <div>
+                                <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Performance Metrics</h3>
+                                <div class="grid grid-cols-2 gap-4 mb-6">
+                                    <div class="text-center p-4 bg-surface rounded-lg">
+                                        <div id="modalVideos" class="text-2xl font-inter font-bold text-primary mb-1"></div>
+                                        <div class="text-sm text-text-secondary">Videos Created</div>
+                                    </div>
+                                    <div class="text-center p-4 bg-surface rounded-lg">
+                                        <div id="modalRating" class="text-2xl font-inter font-bold text-accent mb-1"></div>
+                                        <div class="text-sm text-text-secondary">Average Rating</div>
+                                    </div>
+                                    <div class="text-center p-4 bg-surface rounded-lg">
+                                        <div id="modalStudents" class="text-2xl font-inter font-bold text-secondary mb-1"></div>
+                                        <div class="text-sm text-text-secondary">Students Helped</div>
+                                    </div>
+                                    <div class="text-center p-4 bg-surface rounded-lg">
+                                        <div id="modalExperience" class="text-2xl font-inter font-bold text-success mb-1"></div>
+                                        <div class="text-sm text-text-secondary">Years Experience</div>
+                                    </div>
+                                </div>
+
+                                <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Recent Contributions</h3>
+                                <div id="modalContributions" class="space-y-3 mb-6"></div>
+
+                                <div class="flex gap-4">
+                                    <a href="educational_content_gallery.html" class="btn-primary flex-1 text-center">
+                                        <i class="fas fa-play-circle mr-2"></i>
+                                        View Content
+                                    </a>
+                                    <a href="support_resources.html" class="btn-secondary flex-1 text-center">
+                                        <i class="fas fa-envelope mr-2"></i>
+                                        Contact
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content Tab -->
+                    <div id="contentTab" class="tab-content hidden">
+                        <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Latest Content</h3>
+                        <div id="modalContentList" class="space-y-4 mb-6">
+                            <!-- Content items will be dynamically added here -->
+                        </div>
+
+                        <div class="flex justify-center">
+                            <a href="educational_content_gallery.html" class="btn-primary">
+                                <i class="fas fa-th-large mr-2"></i>
+                                View All Content
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Contact Tab -->
+                    <div id="contactTab" class="tab-content hidden">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Contact Information</h3>
+                                <div class="space-y-4 mb-6">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-envelope text-primary w-6 mr-3"></i>
+                                        <span id="modalEmail" class="text-text-secondary"></span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-calendar text-primary w-6 mr-3"></i>
+                                        <span id="modalAvailabilityHours" class="text-text-secondary"></span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-map-marker-alt text-primary w-6 mr-3"></i>
+                                        <span id="modalLocation" class="text-text-secondary"></span>
+                                    </div>
+                                </div>
+
+                                <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Social Media</h3>
+                                <div class="flex space-x-4 mb-6">
+                                    <a href="javascript:void(0)" class="text-primary hover:text-primary-700 transition-default social-icon">
+                                        <i class="fab fa-twitter text-xl"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="text-primary hover:text-primary-700 transition-default social-icon">
+                                        <i class="fab fa-linkedin text-xl"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="text-primary hover:text-primary-700 transition-default social-icon">
+                                        <i class="fab fa-youtube text-xl"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="text-primary hover:text-primary-700 transition-default social-icon">
+                                        <i class="fab fa-github text-xl"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Send a Message</h3>
+                                <form id="contactForm" class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-text-primary mb-2">Your Name</label>
+                                        <input type="text" class="input-field" placeholder="Enter your name" required>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-text-primary mb-2">Email Address</label>
+                                        <input type="email" class="input-field" placeholder="Enter your email" required>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-text-primary mb-2">Subject</label>
+                                        <input type="text" class="input-field" placeholder="Enter subject" required>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-text-primary mb-2">Message</label>
+                                        <textarea class="input-field" rows="4" placeholder="Enter your message" required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn-primary w-full">
+                                        <i class="fas fa-paper-plane mr-2"></i>
+                                        Send Message
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ID Card Tab -->
+                    <div id="idcardTab" class="tab-content hidden">
+                        <div class="id-card-container">
+                            <div class="id-card" id="idCardElement">
+                                <div class="id-card-decoration id-card-decoration-1"></div>
+                                <div class="id-card-decoration id-card-decoration-2"></div>
+                                <div class="id-card-decoration id-card-decoration-3"></div>
+                                <div class="id-card-holo"></div>
+                                
+                                <div class="id-card-header">
+                                    <div class="id-card-logo">TOMO ACADEMY</div>
+                                    <div class="id-card-badge">
+                                        <i class="fas fa-check-circle mr-1"></i>
+                                        VERIFIED
+                                    </div>
+                                </div>
+                                
+                                <div class="id-card-body">
+                                    <div class="id-card-info">
+                                        <div class="id-card-name" id="idCardName"></div>
+                                        <div class="id-card-role" id="idCardRole"></div>
+                                        <div class="id-card-details">
+                                            <div>
+                                                <i class="fas fa-id-badge"></i>
+                                                <span>ID: <span id="idCardId"></span></span>
+                                            </div>
+                                            <div>
+                                                <i class="fas fa-building"></i>
+                                                <span>Dept: <span id="idCardDepartment"></span></span>
+                                            </div>
+                                            <div>
+                                                <i class="fas fa-calendar-alt"></i>
+                                                <span>Since: <span id="idCardSince"></span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="id-card-photo-container">
+                                        <img id="idCardPhoto" src="" alt="Profile" class="id-card-photo">
+                                    </div>
+                                </div>
+                                
+                                <div class="id-card-footer">
+                                    <div class="id-card-id" id="idCardIdFooter"></div>
+                                    <div class="id-card-qr" id="idCardQr"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="id-card-actions">
+                            <button class="id-card-download" onclick="downloadIdCard()">
+                                <i class="fas fa-download"></i>
+                                Download ID Card
+                            </button>
+                            <button class="id-card-share" onclick="shareIdCard()">
+                                <i class="fas fa-share-alt"></i>
+                                Share ID Card
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast-notification"></div>
+
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDRKzkXTtv4Gpleej264l_Fv_U7j4nU2xE",
+            authDomain: "tomo-3c4bc.firebaseapp.com",
+            projectId: "tomo-3c4bc",
+            storageBucket: "tomo-3c4bc.firebasestorage.app",
+            messagingSenderId: "314585475223",
+            appId: "1:314585475223:web:38f9f825d0558d3207e1d2",
+            measurementId: "G-JT4K0CC8RY"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // Global variables
+        let viewMode = 'grid';
+        let currentTab = 'about';
+        let currentMember = null;
+        let teamMembers = [];
+
+        // Team member data
+        const teamMemberNames = [
+            'Kanish SJ', 'Kamesh', 'Ajay Krithick', 'Nithish', 'Haridharuson L.J',
+            'Aditya Chaurasiya', 'Dev', 'Nithyasri', 'Raaj Nikitaa', 'Indhumathi',
+            'Kavyashree', 'Keerthana', 'Monika', 'Prawin Krishnan'
+        ];
+
+        const roles = [
+            'Content Creator', 'Subject Expert', 'Tech Lead', 'Community Manager'
+        ];
+
+        const subjects = [
+            'Mathematics', 'Computer Science', 'Physics', 'Chemistry', 'Biology', 
+            'Engineering', 'Business', 'Psychology'
+        ];
+
+        const availabilities = ['available', 'mentoring', 'recent'];
+
+        // Generate team member data
+        function generateTeamMemberData() {
+            const members = [];
+            
+            teamMemberNames.forEach((name, index) => {
+                const role = roles[Math.floor(Math.random() * roles.length)];
+                const subject = subjects[Math.floor(Math.random() * subjects.length)];
+                const availability = availabilities[Math.floor(Math.random() * availabilities.length)];
+                
+                members.push({
+                    id: `member-${index}`,
+                    name: name,
+                    role: role,
+                    subject: subject,
+                    availability: availability,
+                    image: `https://randomuser.me/api/portraits/${index % 2 === 0 ? 'men' : 'women'}/${index + 1}.jpg`,
+                    bio: `${name} is a passionate educator with expertise in ${subject}. With years of experience in the field, ${name} brings innovative teaching methods and a deep understanding of the subject matter to help students succeed.`,
+                    expertise: [
+                        `${subject} Fundamentals`,
+                        `Advanced ${subject}`,
+                        `${subject} Applications`
+                    ],
+                    education: `PhD in ${subject}, University of Excellence • MS in Education, State University`,
+                    videos: Math.floor(Math.random() * 30) + 20,
+                    rating: (Math.random() * 0.5 + 4.5).toFixed(1),
+                    students: Math.floor(Math.random() * 3000) + 1000,
+                    experience: Math.floor(Math.random() * 10) + 3,
+                    email: `${name.toLowerCase().replace(' ', '.')}@tomoacademy.com`,
+                    availabilityHours: 'Mon-Fri, 9AM-5PM EST',
+                    location: ['New York, NY', 'San Francisco, CA', 'Boston, MA', 'Chicago, IL'][Math.floor(Math.random() * 4)],
+                    contributions: [
+                        `${subject} Fundamentals Series - ${Math.floor(Math.random() * 10) + 5} episodes`,
+                        `Advanced ${subject} Concepts - ${Math.floor(Math.random() * 8) + 3} episodes`,
+                        `${subject} Problem Solving - ${Math.floor(Math.random() * 6) + 2} episodes`
+                    ],
+                    content: [
+                        { 
+                            title: `Introduction to ${subject}`, 
+                            duration: `${Math.floor(Math.random() * 10) + 10}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}`, 
+                            views: `${(Math.random() * 20 + 5).toFixed(1)}K`, 
+                            date: '2023-05-15' 
+                        },
+                        { 
+                            title: `Advanced ${subject} Concepts`, 
+                            duration: `${Math.floor(Math.random() * 10) + 15}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}`, 
+                            views: `${(Math.random() * 15 + 3).toFixed(1)}K`, 
+                            date: '2023-06-02' 
+                        },
+                        { 
+                            title: `${subject} Applications`, 
+                            duration: `${Math.floor(Math.random() * 10) + 12}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}`, 
+                            views: `${(Math.random() * 12 + 2).toFixed(1)}K`, 
+                            date: '2023-06-20' 
+                        }
+                    ],
+                    employeeId: `TA${(index + 1).toString().padStart(4, '0')}`,
+                    department: subject,
+                    since: 2020 + Math.floor(Math.random() * 3),
+                    cardVariant: ['tech', 'science', 'arts', 'business'][Math.floor(Math.random() * 4)]
+                });
+            });
+            
+            return members;
+        }
+
+        // Initialize team members
+        function initializeTeamMembers() {
+            // Check if data exists in Firestore
+            db.collection('teamMembers').get().then(snapshot => {
+                if (snapshot.empty) {
+                    // If no data exists, generate and save to Firestore
+                    const members = generateTeamMemberData();
+                    const batch = db.batch();
+                    
+                    members.forEach(member => {
+                        const docRef = db.collection('teamMembers').doc(member.id);
+                        batch.set(docRef, member);
+                    });
+                    
+                    batch.commit().then(() => {
+                        console.log('Team members added to Firestore');
+                        teamMembers = members;
+                        renderTeamMembers();
+                    });
+                } else {
+                    // Data exists, fetch from Firestore
+                    teamMembers = [];
+                    snapshot.forEach(doc => {
+                        teamMembers.push(doc.data());
+                    });
+                    renderTeamMembers();
+                }
+            }).catch(error => {
+                console.error('Error fetching team members:', error);
+                // Fallback to local data
+                teamMembers = generateTeamMemberData();
+                renderTeamMembers();
+            });
+        }
+
+        // Render team members
+        function renderTeamMembers() {
+            const teamGrid = document.getElementById('teamGrid');
+            teamGrid.innerHTML = '';
+            
+            teamMembers.forEach(member => {
+                const card = createTeamMemberCard(member);
+                teamGrid.appendChild(card);
+            });
+            
+            // Trigger animations
+            setTimeout(() => {
+                document.querySelectorAll('.team-member-card').forEach(card => {
+                    card.classList.add('visible');
+                });
+            }, 100);
+        }
+
+        // Create team member card
+        function createTeamMemberCard(member) {
+            const card = document.createElement('div');
+            card.className = 'team-member-card';
+            card.setAttribute('data-role', member.role);
+            card.setAttribute('data-subject', member.subject);
+            card.setAttribute('data-availability', member.availability);
+            
+            const availabilityClass = member.availability === 'available' ? 'bg-success text-white' :
+                                     member.availability === 'mentoring' ? 'bg-primary text-white' :
+                                     'bg-accent text-white';
+            
+            const availabilityText = member.availability === 'available' ? 'Available' :
+                                    member.availability === 'mentoring' ? 'Mentoring' :
+                                    'Active';
+            
+            const roleColor = member.role === 'Content Creator' ? 'text-primary' :
+                             member.role === 'Subject Expert' ? 'text-accent' :
+                             member.role === 'Tech Lead' ? 'text-secondary' :
+                             'text-success';
+            
+            card.innerHTML = `
+                <div class="card group hover:scale-105 transition-premium cursor-pointer" onclick="openMemberModal('${member.id}')">
+                    <div class="relative mb-4">
+                        <img src="${member.image}" alt="${member.name}" class="w-full h-48 object-cover rounded-lg lazy-image" onerror="this.src='https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'; this.onerror=null;" />
+                        <div class="absolute top-3 right-3 ${availabilityClass} px-2 py-1 rounded-full text-xs font-medium availability-badge">
+                            ${availabilityText}
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-inter font-semibold text-text-primary mb-2">${member.name}</h3>
+                    <p class="${roleColor} font-medium mb-2">${member.role}</p>
+                    <p class="text-text-secondary text-sm mb-4">${member.bio.substring(0, 100)}...</p>
+                    
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center text-sm text-text-secondary">
+                            <i class="fas fa-video mr-1"></i>
+                            ${member.videos} Videos
+                        </div>
+                        <div class="flex items-center text-sm text-text-secondary">
+                            <i class="fas fa-star text-yellow-400 mr-1"></i>
+                            ${member.rating}/5
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        ${member.expertise.slice(0, 3).map(skill => 
+                            `<span class="skill-tag px-2 py-1 bg-primary-100 text-primary-600 rounded text-xs">${skill}</span>`
+                        ).join('')}
+                    </div>
+
+                    <div class="flex items-center ${roleColor} font-medium">
+                        <span>View Profile</span>
+                        <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-default"></i>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        // Smooth scroll to team section
+        function scrollToTeam() {
+            document.getElementById('team-section').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        // Set view mode (grid or list)
+        function setViewMode(mode) {
+            viewMode = mode;
+            const gridBtn = document.getElementById('gridViewBtn');
+            const listBtn = document.getElementById('listViewBtn');
+            const teamGrid = document.getElementById('teamGrid');
+            
+            if (mode === 'grid') {
+                gridBtn.classList.add('bg-primary', 'text-white', 'border-primary');
+                gridBtn.classList.remove('text-text-secondary', 'bg-white', 'border-gray-200');
+                listBtn.classList.remove('bg-primary', 'text-white', 'border-primary');
+                listBtn.classList.add('text-text-secondary', 'bg-white', 'border-gray-200');
+                teamGrid.className = 'grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8';
+            } else {
+                listBtn.classList.add('bg-primary', 'text-white', 'border-primary');
+                listBtn.classList.remove('text-text-secondary', 'bg-white', 'border-gray-200');
+                gridBtn.classList.remove('bg-primary', 'text-white', 'border-primary');
+                gridBtn.classList.add('text-text-secondary', 'bg-white', 'border-gray-200');
+                teamGrid.className = 'grid grid-cols-1 gap-6';
+            }
+            
+            // Re-apply current filter
+            filterTeam();
+        }
+
+        // Filter functionality
+        function filterTeam() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const roleFilter = document.getElementById('roleFilter').value;
+            const subjectFilter = document.getElementById('subjectFilter').value;
+            const teamCards = document.querySelectorAll('.team-member-card');
+
+            teamCards.forEach(card => {
+                const name = card.querySelector('h3').textContent.toLowerCase();
+                const role = card.getAttribute('data-role');
+                const subject = card.getAttribute('data-subject');
+                const bio = card.querySelector('p:nth-of-type(2)').textContent.toLowerCase();
+
+                const matchesSearch = name.includes(searchTerm) || bio.includes(searchTerm) || subject.toLowerCase().includes(searchTerm);
+                const matchesRole = !roleFilter || role === roleFilter;
+                const matchesSubject = !subjectFilter || subject === subjectFilter;
+
+                if (matchesSearch && matchesRole && matchesSubject) {
+                    card.style.display = 'block';
+                    // Add highlight for search term
+                    if (searchTerm) {
+                        highlightSearchTerm(card, searchTerm);
+                    } else {
+                        removeSearchHighlight(card);
+                    }
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Highlight search term
+        function highlightSearchTerm(card, term) {
+            const elements = card.querySelectorAll('h3, p');
+            elements.forEach(el => {
+                const text = el.textContent;
+                const regex = new RegExp(`(${term})`, 'gi');
+                el.innerHTML = text.replace(regex, '<span class="search-highlight">$1</span>');
+            });
+        }
+
+        // Remove search highlight
+        function removeSearchHighlight(card) {
+            const elements = card.querySelectorAll('h3, p');
+            elements.forEach(el => {
+                el.innerHTML = el.textContent;
+            });
+        }
+
+        // Filter by availability
+        function filterByAvailability(availability) {
+            const teamCards = document.querySelectorAll('.team-member-card');
+            
+            teamCards.forEach(card => {
+                const cardAvailability = card.getAttribute('data-availability');
+                
+                if (availability === 'available' && cardAvailability === 'available') {
+                    card.style.display = 'block';
+                } else if (availability === 'mentoring' && cardAvailability === 'mentoring') {
+                    card.style.display = 'block';
+                } else if (availability === 'recent' && cardAvailability === 'recent') {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Update filter button states
+            document.querySelectorAll('.filter-tag').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Clear all filters
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('roleFilter').value = '';
+            document.getElementById('subjectFilter').value = '';
+            
+            const teamCards = document.querySelectorAll('.team-member-card');
+            teamCards.forEach(card => {
+                card.style.display = 'block';
+                removeSearchHighlight(card);
+            });
+            
+            // Update filter button states
+            document.querySelectorAll('.filter-tag').forEach(btn => {
+                btn.classList.remove('active');
+            });
+        }
+
+        // Load more members (placeholder)
+        function loadMoreMembers() {
+            showToast('All team members are already loaded!', 'info');
+        }
+
+        // Switch tab in modal
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active', 'text-primary');
+                btn.classList.add('text-text-secondary');
+            });
+            event.target.classList.add('active', 'text-primary');
+            event.target.classList.remove('text-text-secondary');
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            document.getElementById(`${tabName}Tab`).classList.remove('hidden');
+            
+            // If ID Card tab is selected, generate the ID card
+            if (tabName === 'idcard' && currentMember) {
+                generateIdCard(currentMember);
+            }
+        }
+
+        // Member modal functionality
+        function openMemberModal(memberId) {
+            // Find member in teamMembers array
+            currentMember = teamMembers.find(member => member.id === memberId);
+            if (!currentMember) return;
+
+            // Populate modal content
+            document.getElementById('modalImage').src = currentMember.image;
+            document.getElementById('modalImage').alt = currentMember.name;
+            document.getElementById('modalName').textContent = currentMember.name;
+            document.getElementById('modalRole').textContent = currentMember.role;
+            
+            const availabilityClass = currentMember.availability === 'available' ? 'bg-success text-white' :
+                                     currentMember.availability === 'mentoring' ? 'bg-primary text-white' :
+                                     'bg-accent text-white';
+            
+            const availabilityEl = document.getElementById('modalAvailability');
+            availabilityEl.textContent = currentMember.availability.charAt(0).toUpperCase() + currentMember.availability.slice(1);
+            availabilityEl.className = `inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${availabilityClass}`;
+            
+            document.getElementById('modalBio').textContent = currentMember.bio;
+            document.getElementById('modalEducation').textContent = currentMember.education;
+            document.getElementById('modalVideos').textContent = currentMember.videos;
+            document.getElementById('modalRating').textContent = currentMember.rating + '/5';
+            document.getElementById('modalStudents').textContent = currentMember.students.toLocaleString() + '+';
+            document.getElementById('modalExperience').textContent = currentMember.experience;
+            document.getElementById('modalEmail').textContent = currentMember.email;
+            document.getElementById('modalAvailabilityHours').textContent = currentMember.availabilityHours;
+            document.getElementById('modalLocation').textContent = currentMember.location;
+
+            // Populate expertise tags
+            const expertiseEl = document.getElementById('modalExpertise');
+            expertiseEl.innerHTML = '';
+            currentMember.expertise.forEach(skill => {
+                const tag = document.createElement('span');
+                tag.className = 'skill-tag px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-sm';
+                tag.textContent = skill;
+                expertiseEl.appendChild(tag);
+            });
+
+            // Populate contributions
+            const contributionsEl = document.getElementById('modalContributions');
+            contributionsEl.innerHTML = '';
+            currentMember.contributions.forEach(contribution => {
+                const item = document.createElement('div');
+                item.className = 'flex items-center p-3 bg-surface rounded-lg';
+                item.innerHTML = `
+                    <i class="fas fa-video text-primary mr-3 flex-shrink-0"></i>
+                    <span class="text-sm text-text-secondary">${contribution}</span>
+                `;
+                contributionsEl.appendChild(item);
+            });
+
+            // Populate content list
+            const contentListEl = document.getElementById('modalContentList');
+            contentListEl.innerHTML = '';
+            currentMember.content.forEach(item => {
+                const contentItem = document.createElement('div');
+                contentItem.className = 'flex items-center justify-between p-4 bg-surface rounded-lg';
+                contentItem.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-play-circle text-primary mr-4"></i>
+                        <div>
+                            <div class="font-medium text-text-primary">${item.title}</div>
+                            <div class="text-sm text-text-secondary">${item.duration} • ${formatDate(item.date)}</div>
+                        </div>
+                    </div>
+                    <div class="text-sm text-text-secondary">${item.views} views</div>
+                `;
+                contentListEl.appendChild(contentItem);
+            });
+
+            // Reset tab to about
+            currentTab = 'about';
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active', 'text-primary');
+                btn.classList.add('text-text-secondary');
+            });
+            document.querySelector('[onclick="switchTab(\'about\')"]').classList.add('active', 'text-primary');
+            document.querySelector('[onclick="switchTab(\'about\')"]').classList.remove('text-text-secondary');
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            document.getElementById('aboutTab').classList.remove('hidden');
+
+            // Show modal
+            document.getElementById('memberModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMemberModal() {
+            document.getElementById('memberModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Generate ID Card
+        function generateIdCard(member) {
+            document.getElementById('idCardName').textContent = member.name;
+            document.getElementById('idCardRole').textContent = member.role;
+            document.getElementById('idCardId').textContent = member.employeeId;
+            document.getElementById('idCardDepartment').textContent = member.department;
+            document.getElementById('idCardSince').textContent = member.since;
+            document.getElementById('idCardIdFooter').textContent = member.employeeId;
+            document.getElementById('idCardPhoto').src = member.image;
+            
+            // Apply card variant
+            const idCardElement = document.getElementById('idCardElement');
+            idCardElement.className = 'id-card';
+            if (member.cardVariant) {
+                idCardElement.classList.add(`variant-${member.cardVariant}`);
+            }
+            
+            // Generate QR code
+            const qrContainer = document.getElementById('idCardQr');
+            qrContainer.innerHTML = '';
+            
+            const qrData = `https://tomoacademy.com/team/${member.id}`;
+            new QRCode(qrContainer, {
+                text: qrData,
+                width: 50,
+                height: 50,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        // Download ID Card
+        function downloadIdCard() {
+            showToast('ID Card download started!', 'success');
+            // In a real implementation, this would generate and download an image of the ID card
+        }
+
+        // Share ID Card
+        function shareIdCard() {
+            if (navigator.share) {
+                navigator.share({
+                    title: `${currentMember.name}'s ID Card`,
+                    text: `Check out ${currentMember.name}'s ID Card from Tomo Academy`,
+                    url: `https://tomoacademy.com/team/${currentMember.id}`
+                }).then(() => {
+                    showToast('ID Card shared successfully!', 'success');
+                }).catch((error) => {
+                    showToast('Error sharing ID Card', 'error');
+                });
+            } else {
+                // Fallback - copy to clipboard
+                const dummy = document.createElement('input');
+                document.body.appendChild(dummy);
+                dummy.value = `https://tomoacademy.com/team/${currentMember.id}`;
+                dummy.select();
+                document.execCommand('copy');
+                document.body.removeChild(dummy);
+                showToast('ID Card link copied to clipboard!', 'success');
+            }
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast-notification';
+            
+            // Set background color based on type
+            if (type === 'success') {
+                toast.classList.add('success');
+            } else if (type === 'error') {
+                toast.classList.add('error');
+            } else if (type === 'info') {
+                toast.classList.add('info');
+            }
+            
+            // Show toast
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Handle contact form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const name = document.querySelector('#contactForm input[type="text"]').value;
+            const email = document.querySelector('#contactForm input[type="email"]').value;
+            const subject = document.querySelector('#contactForm input[type="text"]:nth-of-type(2)').value;
+            const message = document.querySelector('#contactForm textarea').value;
+            
+            // Save to Firestore
+            db.collection('contactMessages').add({
+                to: currentMember.email,
+                from: email,
+                name: name,
+                subject: subject,
+                message: message,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                showToast('Message sent successfully!', 'success');
+                e.target.reset();
+            }).catch(error => {
+                showToast('Error sending message. Please try again.', 'error');
+                console.error('Error sending message:', error);
+            });
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('memberModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeMemberModal();
+            }
+        });
+
+        // Animate elements on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize team members from Firebase
+            initializeTeamMembers();
+            
+            // Animate counters
+            const counters = document.querySelectorAll('.counter');
+            const speed = 200;
+            
+            const animateCounter = (counter) => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const increment = target / speed;
+                
+                const updateCount = () => {
+                    const currentCount = +counter.innerText;
+                    
+                    if (currentCount < target) {
+                        counter.innerText = Math.ceil(currentCount + increment);
+                        setTimeout(updateCount, 1);
+                    } else {
+                        counter.innerText = target;
+                        
+                        // Add special formatting for certain counters
+                        if (target === 50) {
+                            counter.innerHTML = '50<span style="font-size: 0.6em">K+</span>';
+                        } else if (target === 15) {
+                            counter.innerHTML = '15<span style="font-size: 0.6em">+</span>';
+                        }
+                    }
+                };
+                
+                updateCount();
+            };
+            
+            // Use Intersection Observer to trigger counter animation when visible
+            const observerOptions = {
+                threshold: 0.5,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            counters.forEach(counter => {
+                observer.observe(counter);
+            });
+            
+            // Animate team member cards on scroll
+            const teamMemberObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        teamMemberObserver.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+            
+            document.querySelectorAll('.team-member-card').forEach(card => {
+                teamMemberObserver.observe(card);
+            });
+            
+            // Lazy load images
+            const lazyImages = document.querySelectorAll('.lazy-image');
+            const imageObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.classList.add('loaded');
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+            
+            lazyImages.forEach(img => {
+                imageObserver.observe(img);
+            });
+        });
+    </script>
+</body>
+</html>
