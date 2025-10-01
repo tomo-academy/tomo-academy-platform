@@ -3,354 +3,21 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Team Profiles Hub - Meet Our Expert Educators | Tomo Academy</title>
+    <title>Educational Content Gallery - Tomo Academy Hub</title>
     <link rel="stylesheet" href="../css/main.css" />
-    <meta name="description" content="Meet the dedicated educators behind Tomo Academy. Discover their expertise, achievements, and contributions to peer-to-peer learning and educational innovation." />
+    <meta name="description" content="Explore Tomo Academy's comprehensive educational content library featuring YouTube videos, study guides, and interactive learning resources across all subjects." />
+    
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- QR Code Library -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-    <style>
-        /* Custom animations and styles */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(79, 70, 229, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
-            }
-        }
-        
-        .animate-fadeInUp {
-            animation: fadeInUp 0.6s ease forwards;
-        }
-        
-        .animate-delay-100 {
-            animation-delay: 0.1s;
-        }
-        
-        .animate-delay-200 {
-            animation-delay: 0.2s;
-        }
-        
-        .animate-delay-300 {
-            animation-delay: 0.3s;
-        }
-        
-        .animate-delay-400 {
-            animation-delay: 0.4s;
-        }
-        
-        .team-member-card {
-            transition: all 0.3s ease;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        
-        .team-member-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .team-member-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        
-        .filter-tag {
-            transition: all 0.2s ease;
-        }
-        
-        .filter-tag.active {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        .modal-backdrop {
-            backdrop-filter: blur(5px);
-            background-color: rgba(0, 0, 0, 0.6);
-        }
-        
-        .modal-content {
-            animation: fadeInUp 0.4s ease forwards;
-        }
-        
-        .skill-tag {
-            transition: all 0.2s ease;
-        }
-        
-        .skill-tag:hover {
-            transform: scale(1.05);
-        }
-        
-        .counter {
-            transition: all 0.5s ease;
-        }
-        
-        .loading-skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-        }
-        
-        @keyframes loading {
-            0% {
-                background-position: 200% 0;
-            }
-            100% {
-                background-position: -200% 0;
-            }
-        }
-        
-        .toast-notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #333;
-            color: white;
-            padding: 16px 24px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-        
-        .toast-notification.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        
-        .toast-notification.success {
-            background-color: #10B981;
-        }
-        
-        .toast-notification.error {
-            background-color: #EF4444;
-        }
-        
-        .toast-notification.info {
-            background-color: #3B82F6;
-        }
-        
-        .availability-badge {
-            animation: pulse 2s infinite;
-        }
-        
-        .tab-button {
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .tab-button::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 3px;
-            background-color: var(--primary);
-            transition: width 0.3s ease;
-        }
-        
-        .tab-button.active::after {
-            width: 100%;
-        }
-        
-        .social-icon {
-            transition: all 0.2s ease;
-        }
-        
-        .social-icon:hover {
-            transform: translateY(-3px);
-        }
-        
-        .search-highlight {
-            background-color: #FEF3C7;
-            padding: 0 2px;
-            border-radius: 2px;
-        }
-        
-        .lazy-image {
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .lazy-image.loaded {
-            opacity: 1;
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-        
-        /* ID Card Styles */
-        .id-card {
-            width: 350px;
-            height: 200px;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .id-card::before {
-            content: '';
-            position: absolute;
-            top: -50px;
-            right: -50px;
-            width: 150px;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-        }
-        
-        .id-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .id-card-logo {
-            font-weight: bold;
-            font-size: 18px;
-        }
-        
-        .id-card-title {
-            font-size: 12px;
-            opacity: 0.8;
-        }
-        
-        .id-card-body {
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .id-card-info {
-            flex: 1;
-        }
-        
-        .id-card-name {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .id-card-role {
-            font-size: 14px;
-            margin-bottom: 10px;
-            opacity: 0.9;
-        }
-        
-        .id-card-details {
-            font-size: 12px;
-            line-height: 1.4;
-        }
-        
-        .id-card-photo {
-            width: 80px;
-            height: 80px;
-            border-radius: 10px;
-            object-fit: cover;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .id-card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-            font-size: 12px;
-        }
-        
-        .id-card-id {
-            font-family: monospace;
-        }
-        
-        .id-card-qr {
-            width: 50px;
-            height: 50px;
-            background: white;
-            border-radius: 5px;
-            padding: 5px;
-        }
-        
-        .id-card-actions {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-        
-        .id-card-download {
-            background-color: #10B981;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        
-        .id-card-download:hover {
-            background-color: #059669;
-        }
-        
-        .id-card-share {
-            background-color: #3B82F6;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        
-        .id-card-share:hover {
-            background-color: #2563EB;
-        }
-    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-storage-compat.js"></script>
+    
+    <!-- YouTube Data API -->
+    <script src="https://apis.google.com/js/api.js"></script>
+    
+    <script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Ftomoacade7208back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
 </head>
 <body class="bg-background min-h-screen">
     <!-- Smart Header Navigation -->
@@ -377,10 +44,9 @@
                     <div class="ml-10 flex items-baseline space-x-8">
                         <a href="homepage.html" class="text-text-secondary hover:text-primary transition-default px-3 py-2 rounded-md text-sm">Home</a>
                         <a href="about_tomo_academy.html" class="text-text-secondary hover:text-primary transition-default px-3 py-2 rounded-md text-sm">About</a>
-                        <a href="team_profiles_hub.html" class="text-primary font-semibold px-3 py-2 rounded-md text-sm">Team</a>
-                        <a href="educational_content_gallery.html" class="text-text-secondary hover:text-primary transition-default px-3 py-2 rounded-md text-sm">Content</a>
+                        <a href="team_profiles_hub.html" class="text-text-secondary hover:text-primary transition-default px-3 py-2 rounded-md text-sm">Team</a>
+                        <a href="educational_content_gallery.html" class="text-primary font-semibold px-3 py-2 rounded-md text-sm">Content</a>
                         <a href="digital_id_generator.html" class="text-text-secondary hover:text-primary transition-default px-3 py-2 rounded-md text-sm">ID Generator</a>
-                        <a href="id_cards_gallery.html" class="text-text-secondary hover:text-primary transition-default px-3 py-2 rounded-md text-sm">ID Cards</a>
                         <a href="support_resources.html" class="text-text-secondary hover:text-primary transition-default px-3 py-2 rounded-md text-sm">Support</a>
                     </div>
                 </div>
@@ -405,10 +71,9 @@
                 <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-surface rounded-lg mt-2">
                     <a href="homepage.html" class="text-text-secondary hover:text-primary transition-default block px-3 py-2 rounded-md text-base">Home</a>
                     <a href="about_tomo_academy.html" class="text-text-secondary hover:text-primary transition-default block px-3 py-2 rounded-md text-base">About</a>
-                    <a href="team_profiles_hub.html" class="text-primary font-semibold block px-3 py-2 rounded-md text-base">Team</a>
-                    <a href="educational_content_gallery.html" class="text-text-secondary hover:text-primary transition-default block px-3 py-2 rounded-md text-base">Content</a>
+                    <a href="team_profiles_hub.html" class="text-text-secondary hover:text-primary transition-default block px-3 py-2 rounded-md text-base">Team</a>
+                    <a href="educational_content_gallery.html" class="text-primary font-semibold block px-3 py-2 rounded-md text-base">Content</a>
                     <a href="digital_id_generator.html" class="text-text-secondary hover:text-primary transition-default block px-3 py-2 rounded-md text-base">ID Generator</a>
-                    <a href="id_cards_gallery.html" class="text-text-secondary hover:text-primary transition-default block px-3 py-2 rounded-md text-base">ID Cards</a>
                     <a href="support_resources.html" class="text-text-secondary hover:text-primary transition-default block px-3 py-2 rounded-md text-base">Support</a>
                     <div class="pt-2">
                         <a href="digital_id_generator.html" class="btn-primary w-full text-center block">Create ID Card</a>
@@ -423,308 +88,367 @@
         <div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5"></div>
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
             <div class="text-center">
-                <div class="inline-flex items-center px-4 py-2 bg-accent-100 text-accent-700 rounded-full text-sm font-medium mb-6 animate-fadeInUp">
-                    <i class="fas fa-check-circle mr-2"></i>
-                    14 Expert Educators • 50,000+ Students Impacted
+                <div class="inline-flex items-center px-4 py-2 bg-accent-100 text-accent-700 rounded-full text-sm font-medium mb-6">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                    </svg>
+                    <span id="video-count">500+</span> Educational Videos • <span id="monthly-views">50,000+</span> Views Monthly
                 </div>
-                <h1 class="text-4xl lg:text-6xl font-inter font-bold text-text-primary mb-6 leading-tight animate-fadeInUp animate-delay-100">
-                    Meet the minds behind
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">educational innovation</span>
+                <h1 class="text-4xl lg:text-6xl font-inter font-bold text-text-primary mb-6 leading-tight">
+                    Your complete 
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">learning library</span>
                 </h1>
-                <p class="text-xl text-text-secondary mb-8 leading-relaxed max-w-3xl mx-auto animate-fadeInUp animate-delay-200">
-                    Our diverse team of 14 dedicated educators, content creators, and technology innovators work together to bridge traditional learning with modern digital solutions. Each member brings unique expertise and passion for empowering students.
+                <p class="text-xl text-text-secondary mb-8 leading-relaxed max-w-3xl mx-auto">
+                    Discover comprehensive educational content created by our expert team. From exam preparation to advanced concepts, find everything you need to excel in your academic journey.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fadeInUp animate-delay-300">
-                    <button onclick="scrollToTeam()" class="btn-primary text-lg px-8 py-4">
-                        <i class="fas fa-users mr-2"></i>
-                        Explore Team
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="scrollToContent()" class="btn-primary text-lg px-8 py-4">
+                        <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        Explore Content
                     </button>
-                    <a href="educational_content_gallery.html" class="btn-secondary text-lg px-8 py-4">
-                        <i class="fas fa-play-circle mr-2"></i>
-                        View Content
+                    <a href="https://youtube.com/@tomoacademy" target="_blank" class="btn-secondary text-lg px-8 py-4">
+                        <svg class="w-5 h-5 mr-2 inline" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                        </svg>
+                        Subscribe Channel
                     </a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Team Statistics -->
-    <section class="py-16 bg-white">
+    <!-- Content Statistics -->
+    <section class="py-12 bg-white border-b border-surface">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-                <div class="animate-fadeInUp">
-                    <div class="text-4xl lg:text-5xl font-inter font-bold text-primary mb-2 counter" data-target="14">0</div>
-                    <div class="text-text-secondary">Expert Educators</div>
-                </div>
-                <div class="animate-fadeInUp animate-delay-100">
-                    <div class="text-4xl lg:text-5xl font-inter font-bold text-secondary mb-2 counter" data-target="250">0</div>
+                <div>
+                    <div class="text-3xl lg:text-4xl font-inter font-bold text-primary mb-2" id="total-videos">500+</div>
                     <div class="text-text-secondary">Educational Videos</div>
                 </div>
-                <div class="animate-fadeInUp animate-delay-200">
-                    <div class="text-4xl lg:text-5xl font-inter font-bold text-accent mb-2 counter" data-target="50">0<span style="font-size: 0.6em">K+</span></div>
-                    <div class="text-text-secondary">Students Helped</div>
-                </div>
-                <div class="animate-fadeInUp animate-delay-300">
-                    <div class="text-4xl lg:text-5xl font-inter font-bold text-success mb-2 counter" data-target="15">0<span style="font-size: 0.6em">+</span></div>
+                <div>
+                    <div class="text-3xl lg:text-4xl font-inter font-bold text-secondary mb-2" id="subject-count">15</div>
                     <div class="text-text-secondary">Subject Areas</div>
+                </div>
+                <div>
+                    <div class="text-3xl lg:text-4xl font-inter font-bold text-accent mb-2" id="total-views">50K+</div>
+                    <div class="text-text-secondary">Monthly Views</div>
+                </div>
+                <div>
+                    <div class="text-3xl lg:text-4xl font-inter font-bold text-success mb-2" id="satisfaction-rate">98%</div>
+                    <div class="text-text-secondary">Student Satisfaction</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Filter & Search Section -->
-    <section id="team-section" class="py-16 bg-gradient-to-r from-primary-50 to-secondary-50">
+    <!-- Advanced Filter System -->
+    <section id="content-section" class="py-16 bg-surface">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-3xl lg:text-4xl font-inter font-bold text-text-primary mb-4">
-                    Find the perfect mentor for your journey
+                    Find exactly what you need
                 </h2>
-                <p class="text-xl text-text-secondary max-w-3xl mx-auto">
-                    Filter by expertise, content type, or collaboration availability to connect with the right team member.
+                <p class="text-xl text-text-secondary">
+                    Advanced filtering to help you discover the perfect learning content
                 </p>
             </div>
 
-            <!-- Search and Filter Controls -->
-            <div class="bg-white rounded-2xl shadow-card p-6 mb-12">
-                <div class="grid md:grid-cols-4 gap-4">
-                    <!-- Search Bar -->
-                    <div class="md:col-span-2">
-                        <div class="relative">
-                            <input type="text" id="searchInput" placeholder="Search by name, expertise, or subject..." class="input-field pl-12" onkeyup="filterTeam()" />
-                            <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            <!-- Filter Controls -->
+            <div class="card mb-8">
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                    <h3 class="text-lg font-inter font-semibold text-text-primary">Filter Content</h3>
+                    <button onclick="resetFilters()" class="text-accent hover:text-accent-600 font-medium transition-default">
+                        <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                        Reset Filters
+                    </button>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Subject Filter -->
+                    <div>
+                        <label class="block text-sm font-medium text-text-primary mb-2">Subject</label>
+                        <select id="subject-filter" class="input-field" onchange="applyFilters()">
+                            <option value>All Subjects</option>
+                            <option value="mathematics">Mathematics</option>
+                            <option value="physics">Physics</option>
+                            <option value="chemistry">Chemistry</option>
+                            <option value="biology">Biology</option>
+                            <option value="computer-science">Computer Science</option>
+                            <option value="business">Business Studies</option>
+                            <option value="english">English Literature</option>
+                            <option value="history">History</option>
+                        </select>
+                    </div>
+
+                    <!-- Difficulty Filter -->
+                    <div>
+                        <label class="block text-sm font-medium text-text-primary mb-2">Difficulty</label>
+                        <select id="difficulty-filter" class="input-field" onchange="applyFilters()">
+                            <option value>All Levels</option>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                    </div>
+
+                    <!-- Content Type Filter -->
+                    <div>
+                        <label class="block text-sm font-medium text-text-primary mb-2">Content Type</label>
+                        <select id="type-filter" class="input-field" onchange="applyFilters()">
+                            <option value>All Types</option>
+                            <option value="lecture">Lectures</option>
+                            <option value="tutorial">Tutorials</option>
+                            <option value="exam-prep">Exam Prep</option>
+                            <option value="study-guide">Study Guides</option>
+                        </select>
+                    </div>
+
+                    <!-- Duration Filter -->
+                    <div>
+                        <label class="block text-sm font-medium text-text-primary mb-2">Duration</label>
+                        <select id="duration-filter" class="input-field" onchange="applyFilters()">
+                            <option value>Any Duration</option>
+                            <option value="short">Under 10 min</option>
+                            <option value="medium">10-30 min</option>
+                            <option value="long">30+ min</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="mt-6">
+                    <div class="relative">
+                        <input type="text" id="search-input" placeholder="Search for specific topics, concepts, or keywords..." class="input-field pl-12" onkeyup="applyFilters()" />
+                        <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Results -->
+            <div id="content-results">
+                <!-- Loading Indicator -->
+                <div id="loading-indicator" class="text-center py-12">
+                    <svg class="animate-spin h-12 w-12 text-primary mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <p class="mt-4 text-text-secondary">Loading content from YouTube...</p>
+                </div>
+
+                <!-- Featured Content Series -->
+                <div id="featured-series-container" class="mb-12 hidden">
+                    <h3 class="text-2xl font-inter font-bold text-text-primary mb-6">Featured Series</h3>
+                    <div id="featured-series" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Dynamic content will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Individual Videos -->
+                <div id="latest-videos-container" class="mb-12 hidden">
+                    <h3 class="text-2xl font-inter font-bold text-text-primary mb-6">Latest Videos</h3>
+                    <div id="latest-videos" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Dynamic content will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- No Results Message -->
+            <div id="no-results" class="hidden text-center py-12">
+                <svg class="w-16 h-16 text-text-secondary mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.007-5.824-2.562M15 6.306a7.962 7.962 0 00-6 0m6 0V4a2 2 0 00-2-2h-2a2 2 0 00-2 2v2.306"/>
+                </svg>
+                <h3 class="text-xl font-inter font-semibold text-text-primary mb-2">No content found</h3>
+                <p class="text-text-secondary mb-4">Try adjusting your filters or search terms to find more content.</p>
+                <button onclick="resetFilters()" class="btn-primary">Reset Filters</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Progress Tracking Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl lg:text-4xl font-inter font-bold text-text-primary mb-4">
+                    Track your learning progress
+                </h2>
+                <p class="text-xl text-text-secondary">
+                    Personalized recommendations and progress tracking to optimize your study journey
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Progress Dashboard -->
+                <div class="card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-inter font-semibold text-text-primary">Your Progress</h3>
+                        <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                             </svg>
                         </div>
                     </div>
-
-                    <!-- Role Filter -->
-                    <div>
-                        <select id="roleFilter" class="input-field" onchange="filterTeam()">
-                            <option value="All Roles">All Roles</option>
-                            <option value="Content Creator">Content Creator</option>
-                            <option value="Subject Expert">Subject Expert</option>
-                            <option value="Tech Lead">Tech Lead</option>
-                            <option value="Community Manager">Community Manager</option>
-                        </select>
-                    </div>
-
-                    <!-- Subject Filter -->
-                    <div>
-                        <select id="subjectFilter" class="input-field" onchange="filterTeam()">
-                            <option value="All Subjects">All Subjects</option>
-                            <option value="Mathematics">Mathematics</option>
-                            <option value="Computer Science">Computer Science</option>
-                            <option value="Physics">Physics</option>
-                            <option value="Chemistry">Chemistry</option>
-                            <option value="Biology">Biology</option>
-                            <option value="Engineering">Engineering</option>
-                            <option value="Business">Business</option>
-                            <option value="Psychology">Psychology</option>
-                        </select>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-text-secondary">Videos Watched</span>
+                            <span class="font-semibold text-text-primary" id="videos-watched">0/0</span>
+                        </div>
+                        <div class="w-full bg-surface rounded-full h-2">
+                            <div id="progress-bar" class="bg-primary h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-text-secondary">Study Streak</span>
+                            <span class="font-semibold text-accent" id="study-streak">0 days</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Filter Tags -->
-                <div class="flex flex-wrap gap-2 mt-4">
-                    <button onclick="filterByAvailability('available')" class="filter-tag px-4 py-2 bg-success-100 text-success-600 rounded-full text-sm font-medium hover:bg-success-200 transition-default">
-                        <i class="fas fa-circle text-success-500 mr-1 text-xs"></i>
-                        Available for Collaboration
-                    </button>
-                    <button onclick="filterByAvailability('mentoring')" class="filter-tag px-4 py-2 bg-primary-100 text-primary-600 rounded-full text-sm font-medium hover:bg-primary-200 transition-default">
-                        <i class="fas fa-user-graduate text-primary-500 mr-1 text-xs"></i>
-                        Accepting Mentees
-                    </button>
-                    <button onclick="filterByAvailability('recent')" class="filter-tag px-4 py-2 bg-accent-100 text-accent-600 rounded-full text-sm font-medium hover:bg-accent-200 transition-default">
-                        <i class="fas fa-clock text-accent-500 mr-1 text-xs"></i>
-                        Recently Active
-                    </button>
-                    <button onclick="clearFilters()" class="filter-tag px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm font-medium hover:bg-gray-200 transition-default">
-                        <i class="fas fa-times mr-1"></i>
-                        Clear All
-                    </button>
+                <!-- Personalized Recommendations -->
+                <div class="card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-inter font-semibold text-text-primary">Recommended</h3>
+                        <div class="w-10 h-10 bg-secondary-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div id="recommendations-container" class="space-y-3">
+                        <!-- Dynamic recommendations will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Study Planner -->
+                <div class="card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-inter font-semibold text-text-primary">Study Planner</h3>
+                        <div class="w-10 h-10 bg-accent-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-surface rounded-lg">
+                            <div>
+                                <div class="font-medium text-text-primary text-sm">Today's Goal</div>
+                                <div class="text-xs text-text-secondary">Complete <span id="daily-goal">0</span> videos</div>
+                            </div>
+                            <div class="w-8 h-8 bg-success text-white rounded-full flex items-center justify-center text-xs font-bold" id="daily-progress">0</div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-primary-50 rounded-lg">
+                            <div>
+                                <div class="font-medium text-text-primary text-sm">This Week</div>
+                                <div class="text-xs text-text-secondary">Finish Calculus Series</div>
+                            </div>
+                            <div class="text-primary text-sm font-medium" id="weekly-progress">0/12</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community & Engagement -->
+    <section class="py-16 bg-gradient-to-r from-primary-50 to-secondary-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl lg:text-4xl font-inter font-bold text-text-primary mb-4">
+                    Join our learning community
+                </h2>
+                <p class="text-xl text-text-secondary">
+                    Connect with fellow students, share insights, and accelerate your learning
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <!-- Community Stats -->
+                <div class="card">
+                    <h3 class="text-xl font-inter font-semibold text-text-primary mb-6">Community Impact</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-inter font-bold text-primary mb-1" id="active-learners">25,000+</div>
+                            <div class="text-sm text-text-secondary">Active Learners</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-inter font-bold text-secondary mb-1" id="study-groups">1,200+</div>
+                            <div class="text-sm text-text-secondary">Study Groups</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-inter font-bold text-accent mb-1" id="daily-discussions">500+</div>
+                            <div class="text-sm text-text-secondary">Daily Discussions</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-inter font-bold text-success mb-1" id="success-rate">95%</div>
+                            <div class="text-sm text-text-secondary">Success Rate</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Community Activity -->
+                <div class="card">
+                    <h3 class="text-xl font-inter font-semibold text-text-primary mb-6">Recent Activity</h3>
+                    <div id="community-activity" class="space-y-4">
+                        <!-- Dynamic community activity will be inserted here -->
+                    </div>
                 </div>
             </div>
 
-            <!-- View Toggle -->
-            <div class="flex justify-end mb-4">
-                <div class="inline-flex rounded-md shadow-sm" role="group">
-                    <button type="button" onclick="setViewMode('grid')" id="gridViewBtn" class="px-4 py-2 text-sm font-medium text-white bg-primary border border-primary rounded-l-lg hover:bg-primary-700">
-                        <i class="fas fa-th"></i>
-                    </button>
-                    <button type="button" onclick="setViewMode('list')" id="listViewBtn" class="px-4 py-2 text-sm font-medium text-text-secondary bg-white border border-gray-200 rounded-r-md hover:bg-gray-100">
-                        <i class="fas fa-list"></i>
-                    </button>
+            <!-- CTA Section -->
+            <div class="text-center">
+                <div class="card max-w-2xl mx-auto">
+                    <h3 class="text-2xl font-inter font-bold text-text-primary mb-4">Ready to start learning?</h3>
+                    <p class="text-text-secondary mb-6">Join thousands of students who are already transforming their academic journey with Tomo Academy.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="https://youtube.com/@tomoacademy" target="_blank" class="btn-primary">
+                            <svg class="w-5 h-5 mr-2 inline" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                            </svg>
+                            Subscribe to Channel
+                        </a>
+                        <a href="digital_id_generator.html" class="btn-secondary">
+                            <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V4a2 2 0 114 0v2m-4 0a2 2 0 104 0m-4 0v2m4-2v2"/>
+                            </svg>
+                            Create Student ID
+                        </a>
+                    </div>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <!-- Team Members Grid -->
-            <div id="teamGrid" class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                <!-- Team members will be dynamically loaded here -->
-            </div>
-
-            <!-- Load More Button -->
-            <div class="text-center mt-12">
-                <button onclick="loadMoreMembers()" class="btn-secondary px-8 py-4">
-                    <i class="fas fa-plus mr-2"></i>
-                    Load More Team Members
+    <!-- YouTube Video Modal -->
+    <div id="youtube-modal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h3 id="modal-title" class="text-xl font-bold text-text-primary"></h3>
+                <button onclick="closeYouTubeModal()" class="text-text-secondary hover:text-text-primary">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
                 </button>
             </div>
-        </div>
-    </section>
-
-    <!-- Team Collaboration Section -->
-    <section class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl lg:text-4xl font-inter font-bold text-text-primary mb-4">
-                    Collaborative excellence in action
-                </h2>
-                <p class="text-xl text-text-secondary max-w-3xl mx-auto">
-                    Our team works together to create comprehensive educational experiences that combine expertise across multiple disciplines.
-                </p>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Content Creation Process -->
-                <div class="card text-center animate-fadeInUp">
-                    <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-video text-primary text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Content Creation</h3>
-                    <p class="text-text-secondary mb-6">Our subject experts collaborate with content creators to produce high-quality educational videos that make complex topics accessible.</p>
-                    <a href="educational_content_gallery.html" class="text-primary font-medium hover:text-primary-700 transition-default">
-                        View Our Content <i class="fas fa-arrow-right ml-1"></i>
-                    </a>
+            <div class="flex-grow overflow-auto">
+                <div id="youtube-player" class="w-full" style="height: 0; padding-bottom: 56.25%; position: relative;">
+                    <!-- YouTube player will be embedded here -->
                 </div>
-
-                <!-- Peer Review System -->
-                <div class="card text-center animate-fadeInUp animate-delay-100">
-                    <div class="w-16 h-16 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-check-circle text-secondary text-2xl"></i>
+                <div class="p-4">
+                    <div id="video-details" class="mb-4">
+                        <!-- Video details will be loaded here -->
                     </div>
-                    <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Quality Assurance</h3>
-                    <p class="text-text-secondary mb-6">Every piece of content goes through rigorous peer review to ensure accuracy, clarity, and educational effectiveness.</p>
-                    <a href="about_tomo_academy.html" class="text-secondary font-medium hover:text-secondary-700 transition-default">
-                        Learn Our Process <i class="fas fa-arrow-right ml-1"></i>
-                    </a>
-                </div>
-
-                <!-- Student Feedback Integration -->
-                <div class="card text-center animate-fadeInUp animate-delay-200">
-                    <div class="w-16 h-16 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-comments text-accent text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Student-Centered</h3>
-                    <p class="text-text-secondary mb-6">We actively incorporate student feedback and questions to continuously improve our educational approach and content relevance.</p>
-                    <a href="support_resources.html" class="text-accent font-medium hover:text-accent-700 transition-default">
-                        Share Feedback <i class="fas fa-arrow-right ml-1"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section class="py-20 bg-gradient-to-r from-primary-50 to-secondary-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl lg:text-4xl font-inter font-bold text-text-primary mb-4">
-                    What our students say
-                </h2>
-                <p class="text-xl text-text-secondary max-w-3xl mx-auto">
-                    Hear from students who have transformed their learning journey with our expert educators.
-                </p>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Testimonial 1 -->
-                <div class="card animate-fadeInUp">
-                    <div class="flex items-center mb-4">
-                        <div class="text-yellow-400 mr-1">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span class="text-sm text-text-secondary ml-2">5.0</span>
-                    </div>
-                    <p class="text-text-secondary mb-6 italic">"The team at Tomo Academy completely transformed my learning experience. Their personalized approach and expert guidance helped me excel in my studies."</p>
-                    <div class="flex items-center">
-                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face" alt="Student" class="w-10 h-10 rounded-full mr-3">
-                        <div>
-                            <div class="font-medium text-text-primary">Priya Sharma</div>
-                            <div class="text-sm text-text-secondary">Engineering Student</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Testimonial 2 -->
-                <div class="card animate-fadeInUp animate-delay-100">
-                    <div class="flex items-center mb-4">
-                        <div class="text-yellow-400 mr-1">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <span class="text-sm text-text-secondary ml-2">5.0</span>
-                    </div>
-                    <p class="text-text-secondary mb-6 italic">"I can't thank the Tomo Academy team enough. Their innovative teaching methods and genuine care for students made all the difference in my academic journey."</p>
-                    <div class="flex items-center">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="Student" class="w-10 h-10 rounded-full mr-3">
-                        <div>
-                            <div class="font-medium text-text-primary">Michael Chen</div>
-                            <div class="text-sm text-text-secondary">Computer Science Graduate</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Testimonial 3 -->
-                <div class="card animate-fadeInUp animate-delay-200">
-                    <div class="flex items-center mb-4">
-                        <div class="text-yellow-400 mr-1">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <span class="text-sm text-text-secondary ml-2">4.5</span>
-                    </div>
-                    <p class="text-text-secondary mb-6 italic">"The educators at Tomo Academy are not just teachers; they're mentors who truly care about your success. Their guidance has been invaluable."</p>
-                    <div class="flex items-center">
-                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face" alt="Student" class="w-10 h-10 rounded-full mr-3">
-                        <div>
-                            <div class="font-medium text-text-primary">Emma Johnson</div>
-                            <div class="text-sm text-text-secondary">Psychology Student</div>
-                        </div>
+                    <div id="video-comments" class="mt-6">
+                        <!-- Video comments will be loaded here -->
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="py-20 bg-gradient-to-r from-primary to-secondary">
-        <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl lg:text-4xl font-inter font-bold text-white mb-6">
-                Ready to connect with our expert team?
-            </h2>
-            <p class="text-xl text-primary-100 mb-8">
-                Whether you need academic support, collaboration opportunities, or want to join our community, we're here to help.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="support_resources.html" class="bg-white text-primary px-8 py-4 rounded-lg font-inter font-semibold hover:bg-primary-50 transition-default text-lg">
-                    Get Support
-                </a>
-                <a href="educational_content_gallery.html" class="border-2 border-white text-white px-8 py-4 rounded-lg font-inter font-semibold hover:bg-white hover:text-primary transition-default text-lg">
-                    Explore Content
-                </a>
-            </div>
-        </div>
-    </section>
+    </div>
 
     <!-- Footer -->
     <footer class="bg-gray-900 text-white py-16">
@@ -744,17 +468,20 @@
                         Bridging traditional learning with modern digital identity solutions. Empowering students through innovative educational technology.
                     </p>
                     <div class="flex space-x-4">
-                        <a href="javascript:void(0)" class="text-gray-400 hover:text-white transition-default social-icon">
-                            <i class="fab fa-twitter text-xl"></i>
+                        <a href="javascript:void(0)" class="text-gray-400 hover:text-white transition-default">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                            </svg>
                         </a>
-                        <a href="javascript:void(0)" class="text-gray-400 hover:text-white transition-default social-icon">
-                            <i class="fab fa-youtube text-xl"></i>
+                        <a href="https://youtube.com/@tomoacademy" target="_blank" class="text-gray-400 hover:text-white transition-default">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                            </svg>
                         </a>
-                        <a href="javascript:void(0)" class="text-gray-400 hover:text-white transition-default social-icon">
-                            <i class="fab fa-linkedin text-xl"></i>
-                        </a>
-                        <a href="javascript:void(0)" class="text-gray-400 hover:text-white transition-default social-icon">
-                            <i class="fab fa-instagram text-xl"></i>
+                        <a href="javascript:void(0)" class="text-gray-400 hover:text-white transition-default">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
+                            </svg>
                         </a>
                     </div>
                 </div>
@@ -767,7 +494,6 @@
                         <li><a href="team_profiles_hub.html" class="text-gray-300 hover:text-white transition-default">Our Team</a></li>
                         <li><a href="educational_content_gallery.html" class="text-gray-300 hover:text-white transition-default">Content Gallery</a></li>
                         <li><a href="digital_id_generator.html" class="text-gray-300 hover:text-white transition-default">ID Generator</a></li>
-                        <li><a href="id_cards_gallery.html" class="text-gray-300 hover:text-white transition-default">ID Cards</a></li>
                     </ul>
                 </div>
 
@@ -789,212 +515,6 @@
         </div>
     </footer>
 
-    <!-- Member Detail Modal -->
-    <div id="memberModal" class="fixed inset-0 modal-backdrop hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-screen overflow-y-auto modal-content">
-            <div class="p-8">
-                <!-- Modal Header -->
-                <div class="flex justify-between items-start mb-6">
-                    <div class="flex items-center">
-                        <img id="modalImage" src alt class="w-20 h-20 rounded-full object-cover mr-6" />
-                        <div>
-                            <h2 id="modalName" class="text-3xl font-inter font-bold text-text-primary mb-2"></h2>
-                            <p id="modalRole" class="text-xl text-primary font-medium mb-2"></p>
-                            <div id="modalAvailability" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"></div>
-                        </div>
-                    </div>
-                    <button onclick="closeMemberModal()" class="text-gray-400 hover:text-gray-600 transition-default">
-                        <i class="fas fa-times text-2xl"></i>
-                    </button>
-                </div>
-
-                <!-- Tab Navigation -->
-                <div class="flex border-b border-gray-200 mb-6">
-                    <button class="tab-button active px-4 py-2 font-medium text-primary" onclick="switchTab('about')">About</button>
-                    <button class="tab-button px-4 py-2 font-medium text-text-secondary" onclick="switchTab('content')">Content</button>
-                    <button class="tab-button px-4 py-2 font-medium text-text-secondary" onclick="switchTab('contact')">Contact</button>
-                    <button class="tab-button px-4 py-2 font-medium text-text-secondary" onclick="switchTab('idcard')">ID Card</button>
-                </div>
-
-                <!-- Tab Content -->
-                <div id="tabContent">
-                    <!-- About Tab -->
-                    <div id="aboutTab" class="tab-content">
-                        <div class="grid md:grid-cols-2 gap-8">
-                            <!-- Left Column -->
-                            <div>
-                                <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Biography</h3>
-                                <p id="modalBio" class="text-text-secondary mb-6"></p>
-
-                                <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Expertise</h3>
-                                <div id="modalExpertise" class="flex flex-wrap gap-2 mb-6"></div>
-
-                                <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Education</h3>
-                                <p id="modalEducation" class="text-text-secondary mb-6"></p>
-                            </div>
-
-                            <!-- Right Column -->
-                            <div>
-                                <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Performance Metrics</h3>
-                                <div class="grid grid-cols-2 gap-4 mb-6">
-                                    <div class="text-center p-4 bg-surface rounded-lg">
-                                        <div id="modalVideos" class="text-2xl font-inter font-bold text-primary mb-1"></div>
-                                        <div class="text-sm text-text-secondary">Videos Created</div>
-                                    </div>
-                                    <div class="text-center p-4 bg-surface rounded-lg">
-                                        <div id="modalRating" class="text-2xl font-inter font-bold text-accent mb-1"></div>
-                                        <div class="text-sm text-text-secondary">Average Rating</div>
-                                    </div>
-                                    <div class="text-center p-4 bg-surface rounded-lg">
-                                        <div id="modalStudents" class="text-2xl font-inter font-bold text-secondary mb-1"></div>
-                                        <div class="text-sm text-text-secondary">Students Helped</div>
-                                    </div>
-                                    <div class="text-center p-4 bg-surface rounded-lg">
-                                        <div id="modalExperience" class="text-2xl font-inter font-bold text-success mb-1"></div>
-                                        <div class="text-sm text-text-secondary">Years Experience</div>
-                                    </div>
-                                </div>
-
-                                <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Recent Contributions</h3>
-                                <div id="modalContributions" class="space-y-3 mb-6"></div>
-
-                                <div class="flex gap-4">
-                                    <a href="educational_content_gallery.html" class="btn-primary flex-1 text-center">
-                                        <i class="fas fa-play-circle mr-2"></i>
-                                        View Content
-                                    </a>
-                                    <a href="support_resources.html" class="btn-secondary flex-1 text-center">
-                                        <i class="fas fa-envelope mr-2"></i>
-                                        Contact
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Content Tab -->
-                    <div id="contentTab" class="tab-content hidden">
-                        <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Latest Content</h3>
-                        <div id="modalContentList" class="space-y-4 mb-6">
-                            <!-- Content items will be dynamically added here -->
-                        </div>
-
-                        <div class="flex justify-center">
-                            <a href="educational_content_gallery.html" class="btn-primary">
-                                <i class="fas fa-th-large mr-2"></i>
-                                View All Content
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Contact Tab -->
-                    <div id="contactTab" class="tab-content hidden">
-                        <div class="grid md:grid-cols-2 gap-8">
-                            <div>
-                                <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Contact Information</h3>
-                                <div class="space-y-4 mb-6">
-                                    <div class="flex items-center">
-                                        <i class="fas fa-envelope text-primary w-6 mr-3"></i>
-                                        <span id="modalEmail" class="text-text-secondary"></span>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <i class="fas fa-calendar text-primary w-6 mr-3"></i>
-                                        <span id="modalAvailabilityHours" class="text-text-secondary"></span>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <i class="fas fa-map-marker-alt text-primary w-6 mr-3"></i>
-                                        <span id="modalLocation" class="text-text-secondary"></span>
-                                    </div>
-                                </div>
-
-                                <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Social Media</h3>
-                                <div class="flex space-x-4 mb-6">
-                                    <a href="javascript:void(0)" class="text-primary hover:text-primary-700 transition-default social-icon">
-                                        <i class="fab fa-twitter text-xl"></i>
-                                    </a>
-                                    <a href="javascript:void(0)" class="text-primary hover:text-primary-700 transition-default social-icon">
-                                        <i class="fab fa-linkedin text-xl"></i>
-                                    </a>
-                                    <a href="javascript:void(0)" class="text-primary hover:text-primary-700 transition-default social-icon">
-                                        <i class="fab fa-youtube text-xl"></i>
-                                    </a>
-                                    <a href="javascript:void(0)" class="text-primary hover:text-primary-700 transition-default social-icon">
-                                        <i class="fab fa-github text-xl"></i>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div>
-                                <h3 class="text-xl font-inter font-semibold text-text-primary mb-4">Send a Message</h3>
-                                <form id="contactForm" class="space-y-4">
-                                    <div>
-                                        <label class="block text-sm font-medium text-text-primary mb-2">Your Name</label>
-                                        <input type="text" class="input-field" placeholder="Enter your name" required>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-text-primary mb-2">Email Address</label>
-                                        <input type="email" class="input-field" placeholder="Enter your email" required>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-text-primary mb-2">Subject</label>
-                                        <input type="text" class="input-field" placeholder="Enter subject" required>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-text-primary mb-2">Message</label>
-                                        <textarea class="input-field" rows="4" placeholder="Enter your message" required></textarea>
-                                    </div>
-                                    <button type="submit" class="btn-primary w-full">
-                                        <i class="fas fa-paper-plane mr-2"></i>
-                                        Send Message
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ID Card Tab -->
-                    <div id="idcardTab" class="tab-content hidden">
-                        <div class="flex justify-center">
-                            <div class="id-card">
-                                <div class="id-card-header">
-                                    <div class="id-card-logo">TOMO ACADEMY</div>
-                                    <div class="id-card-title">EDUCATOR ID</div>
-                                </div>
-                                <div class="id-card-body">
-                                    <div class="id-card-info">
-                                        <div class="id-card-name" id="idCardName"></div>
-                                        <div class="id-card-role" id="idCardRole"></div>
-                                        <div class="id-card-details">
-                                            <div>ID: <span id="idCardId"></span></div>
-                                            <div>Dept: <span id="idCardDepartment"></span></div>
-                                            <div>Since: <span id="idCardSince"></span></div>
-                                        </div>
-                                    </div>
-                                    <img id="idCardPhoto" src="" alt="Profile" class="id-card-photo">
-                                </div>
-                                <div class="id-card-footer">
-                                    <div class="id-card-id" id="idCardIdFooter"></div>
-                                    <div class="id-card-qr" id="idCardQr"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="id-card-actions">
-                            <button class="id-card-download" onclick="downloadIdCard()">
-                                <i class="fas fa-download mr-2"></i> Download ID Card
-                            </button>
-                            <button class="id-card-share" onclick="shareIdCard()">
-                                <i class="fas fa-share-alt mr-2"></i> Share ID Card
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Notification -->
-    <div id="toast" class="toast-notification"></div>
-
     <script>
         // Initialize Firebase
         const firebaseConfig = {
@@ -1009,672 +529,1179 @@
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const auth = firebase.auth();
         const storage = firebase.storage();
+        const analytics = firebase.analytics();
 
+        // YouTube API Configuration - Using Vercel API proxy
+        const API_BASE_URL = process.env.NODE_ENV === 'production' 
+            ? '' // Use relative path in production
+            : 'http://localhost:3000'; // Use localhost in development
+            
+        const TOMO_ACADEMY_CHANNEL_ID = "UCt6nZjZxY7qF8X7Y5qZ9Q"; // Replace with Tomo Academy's actual channel ID
+        
         // Global variables
-        let viewMode = 'grid';
-        let currentTab = 'about';
-        let currentMember = null;
-        let teamMembers = [];
+        let allContent = [];
+        let filteredContent = [];
+        let userProgress = {};
+        let currentUser = null;
+        let youtubePlayer = null;
+        let currentVideoId = null;
 
-        // Team member data
-        const teamMemberNames = [
-            'Kanish SJ', 'Kamesh', 'Ajay Krithick', 'Nithish', 'Haridharuson L.J',
-            'Aditya Chaurasiya', 'Dev', 'Nithyasri', 'Raaj Nikitaa', 'Indhumathi',
-            'Kavyashree', 'Keerthana', 'Monika', 'Prawin Krishnan'
-        ];
+        // Check authentication state
+        auth.onAuthStateChanged(user => {
+            currentUser = user;
+            if (user) {
+                // User is signed in
+                loadUserProgress(user.uid);
+                updateProgressSection();
+            } else {
+                // User is signed out
+                updateProgressSection();
+            }
+        });
 
-        const roles = [
-            'Content Creator', 'Subject Expert', 'Tech Lead', 'Community Manager'
-        ];
+        // Load YouTube IFrame API
+        function loadYouTubeAPI() {
+            const tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        }
 
-        const subjects = [
-            'Mathematics', 'Computer Science', 'Physics', 'Chemistry', 'Biology', 
-            'Engineering', 'Business', 'Psychology'
-        ];
+        // YouTube IFrame API ready callback
+        function onYouTubeIframeAPIReady() {
+            console.log("YouTube IFrame API is ready");
+        }
 
-        const availabilities = ['available', 'mentoring', 'recent'];
-
-        // Generate team member data
-        function generateTeamMemberData() {
-            const members = [];
-            
-            teamMemberNames.forEach((name, index) => {
-                const role = roles[Math.floor(Math.random() * roles.length)];
-                const subject = subjects[Math.floor(Math.random() * subjects.length)];
-                const availability = availabilities[Math.floor(Math.random() * availabilities.length)];
+        // Simple cache implementation
+        const cache = {
+            get(key) {
+                if (typeof window === 'undefined') return null;
                 
-                members.push({
-                    id: `member-${index}`,
-                    name: name,
-                    role: role,
-                    subject: subject,
-                    availability: availability,
-                    image: `https://randomuser.me/api/portraits/${index % 2 === 0 ? 'men' : 'women'}/${index + 1}.jpg`,
-                    bio: `${name} is a passionate educator with expertise in ${subject}. With years of experience in the field, ${name} brings innovative teaching methods and a deep understanding of the subject matter to help students succeed.`,
-                    expertise: [
-                        `${subject} Fundamentals`,
-                        `Advanced ${subject}`,
-                        `${subject} Applications`
-                    ],
-                    education: `PhD in ${subject}, University of Excellence • MS in Education, State University`,
-                    videos: Math.floor(Math.random() * 30) + 20,
-                    rating: (Math.random() * 0.5 + 4.5).toFixed(1),
-                    students: Math.floor(Math.random() * 3000) + 1000,
-                    experience: Math.floor(Math.random() * 10) + 3,
-                    email: `${name.toLowerCase().replace(' ', '.')}@tomoacademy.com`,
-                    availabilityHours: 'Mon-Fri, 9AM-5PM EST',
-                    location: ['New York, NY', 'San Francisco, CA', 'Boston, MA', 'Chicago, IL'][Math.floor(Math.random() * 4)],
-                    contributions: [
-                        `${subject} Fundamentals Series - ${Math.floor(Math.random() * 10) + 5} episodes`,
-                        `Advanced ${subject} Concepts - ${Math.floor(Math.random() * 8) + 3} episodes`,
-                        `${subject} Problem Solving - ${Math.floor(Math.random() * 6) + 2} episodes`
-                    ],
-                    content: [
-                        { 
-                            title: `Introduction to ${subject}`, 
-                            duration: `${Math.floor(Math.random() * 10) + 10}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}`, 
-                            views: `${(Math.random() * 20 + 5).toFixed(1)}K`, 
-                            date: '2023-05-15' 
-                        },
-                        { 
-                            title: `Advanced ${subject} Concepts`, 
-                            duration: `${Math.floor(Math.random() * 10) + 15}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}`, 
-                            views: `${(Math.random() * 15 + 3).toFixed(1)}K`, 
-                            date: '2023-06-02' 
-                        },
-                        { 
-                            title: `${subject} Applications`, 
-                            duration: `${Math.floor(Math.random() * 10) + 12}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}`, 
-                            views: `${(Math.random() * 12 + 2).toFixed(1)}K`, 
-                            date: '2023-06-20' 
-                        }
-                    ],
-                    employeeId: `TA${(index + 1).toString().padStart(4, '0')}`,
-                    department: subject,
-                    since: 2020 + Math.floor(Math.random() * 3)
-                });
-            });
-            
-            return members;
-        }
-
-        // Initialize team members
-        function initializeTeamMembers() {
-            // Check if data exists in Firestore
-            db.collection('teamMembers').get().then(snapshot => {
-                if (snapshot.empty) {
-                    // If no data exists, generate and save to Firestore
-                    const members = generateTeamMemberData();
-                    const batch = db.batch();
-                    
-                    members.forEach(member => {
-                        const docRef = db.collection('teamMembers').doc(member.id);
-                        batch.set(docRef, member);
-                    });
-                    
-                    batch.commit().then(() => {
-                        console.log('Team members added to Firestore');
-                        teamMembers = members;
-                        renderTeamMembers();
-                    });
-                } else {
-                    // Data exists, fetch from Firestore
-                    teamMembers = [];
-                    snapshot.forEach(doc => {
-                        teamMembers.push(doc.data());
-                    });
-                    renderTeamMembers();
+                const cached = localStorage.getItem(`tomo_academy_${key}`);
+                if (!cached) return null;
+                
+                const { data, timestamp } = JSON.parse(cached);
+                if (Date.now() - timestamp > 3600000) { // 1 hour TTL
+                    localStorage.removeItem(`tomo_academy_${key}`);
+                    return null;
                 }
-            }).catch(error => {
-                console.error('Error fetching team members:', error);
-                // Fallback to local data
-                teamMembers = generateTeamMemberData();
-                renderTeamMembers();
+                
+                return data;
+            },
+            
+            set(key, data) {
+                if (typeof window === 'undefined') return;
+                
+                localStorage.setItem(`tomo_academy_${key}`, JSON.stringify({
+                    data,
+                    timestamp: Date.now()
+                }));
+            }
+        };
+
+        // API call with caching
+        async function cachedFetch(endpoint, params, cacheKey) {
+            // Try to get from cache first
+            const cached = cache.get(cacheKey);
+            if (cached) {
+                return cached;
+            }
+            
+            // Build URL with parameters
+            const url = new URL(`${API_BASE_URL}/api/youtube`);
+            url.searchParams.append('endpoint', endpoint);
+            
+            // Add all parameters
+            Object.keys(params).forEach(key => {
+                if (params[key]) {
+                    url.searchParams.append(key, params[key]);
+                }
             });
+            
+            // Fetch from API
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
+            // Cache the result
+            cache.set(cacheKey, data);
+            
+            return data;
         }
 
-        // Render team members
-        function renderTeamMembers() {
-            const teamGrid = document.getElementById('teamGrid');
-            teamGrid.innerHTML = '';
-            
-            teamMembers.forEach(member => {
-                const card = createTeamMemberCard(member);
-                teamGrid.appendChild(card);
-            });
-            
-            // Trigger animations
-            setTimeout(() => {
-                document.querySelectorAll('.team-member-card').forEach(card => {
-                    card.classList.add('visible');
-                });
-            }, 100);
+        // Load educational content from YouTube API
+        async function loadContent() {
+            try {
+                showLoadingIndicator();
+                
+                // Load channel playlists (series)
+                const playlists = await loadChannelPlaylists();
+                
+                // Load channel videos
+                const videos = await loadChannelVideos();
+                
+                // Combine playlists and videos
+                allContent = [...playlists, ...videos];
+                
+                // Load statistics
+                loadStatistics();
+                
+                // Load community activity
+                loadCommunityActivity();
+                
+                // Apply initial filters
+                applyFilters();
+                
+                // Hide loading indicator
+                hideLoadingIndicator();
+            } catch (error) {
+                console.error("Error loading content: ", error);
+                hideLoadingIndicator();
+                showError("Failed to load content. Please try again later.");
+            }
         }
 
-        // Create team member card
-        function createTeamMemberCard(member) {
-            const card = document.createElement('div');
-            card.className = 'team-member-card';
-            card.setAttribute('data-role', member.role);
-            card.setAttribute('data-subject', member.subject);
-            card.setAttribute('data-availability', member.availability);
-            
-            const availabilityClass = member.availability === 'available' ? 'bg-success text-white' :
-                                     member.availability === 'mentoring' ? 'bg-primary text-white' :
-                                     'bg-accent text-white';
-            
-            const availabilityText = member.availability === 'available' ? 'Available' :
-                                    member.availability === 'mentoring' ? 'Mentoring' :
-                                    'Active';
-            
-            const roleColor = member.role === 'Content Creator' ? 'text-primary' :
-                             member.role === 'Subject Expert' ? 'text-accent' :
-                             member.role === 'Tech Lead' ? 'text-secondary' :
-                             'text-success';
-            
-            card.innerHTML = `
-                <div class="card group hover:scale-105 transition-premium cursor-pointer" onclick="openMemberModal('${member.id}')">
-                    <div class="relative mb-4">
-                        <img src="${member.image}" alt="${member.name}" class="w-full h-48 object-cover rounded-lg lazy-image" onerror="this.src='https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'; this.onerror=null;" />
-                        <div class="absolute top-3 right-3 ${availabilityClass} px-2 py-1 rounded-full text-xs font-medium availability-badge">
-                            ${availabilityText}
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-inter font-semibold text-text-primary mb-2">${member.name}</h3>
-                    <p class="${roleColor} font-medium mb-2">${member.role}</p>
-                    <p class="text-text-secondary text-sm mb-4">${member.bio.substring(0, 100)}...</p>
+        // Load channel playlists from YouTube API
+        async function loadChannelPlaylists() {
+            try {
+                const params = {
+                    part: 'snippet,contentDetails',
+                    channelId: TOMO_ACADEMY_CHANNEL_ID,
+                    maxResults: 10
+                };
+
+                const data = await cachedFetch('playlists', params, `playlists_${TOMO_ACADEMY_CHANNEL_ID}`);
+                
+                const playlists = [];
+                
+                for (const item of data.items) {
+                    const playlist = {
+                        id: item.id,
+                        title: item.snippet.title,
+                        description: item.snippet.description,
+                        thumbnailUrl: item.snippet.thumbnails.high.url,
+                        videoCount: item.contentDetails.itemCount,
+                        publishedAt: new Date(item.snippet.publishedAt),
+                        isSeries: true,
+                        isFeatured: item.snippet.title.toLowerCase().includes('mastery') || 
+                                     item.snippet.title.toLowerCase().includes('fundamentals') ||
+                                     item.snippet.title.toLowerCase().includes('bootcamp'),
+                        subject: extractSubjectFromTitle(item.snippet.title),
+                        difficulty: extractDifficultyFromTitle(item.snippet.title),
+                        type: extractTypeFromTitle(item.snippet.title),
+                        duration: 0, // Will be calculated when loading playlist items
+                        views: 0, // Will be updated when loading playlist items
+                        rating: 0,
+                        ratingCount: 0,
+                        tags: extractTagsFromDescription(item.snippet.description),
+                        playlistItems: [] // Will be populated when needed
+                    };
                     
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center text-sm text-text-secondary">
-                            <i class="fas fa-video mr-1"></i>
-                            ${member.videos} Videos
-                        </div>
-                        <div class="flex items-center text-sm text-text-secondary">
-                            <i class="fas fa-star text-yellow-400 mr-1"></i>
-                            ${member.rating}/5
-                        </div>
-                    </div>
+                    playlists.push(playlist);
+                }
+                
+                return playlists;
+            } catch (error) {
+                console.error("Error loading playlists: ", error);
+                return [];
+            }
+        }
 
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        ${member.expertise.slice(0, 3).map(skill => 
-                            `<span class="skill-tag px-2 py-1 bg-primary-100 text-primary-600 rounded text-xs">${skill}</span>`
-                        ).join('')}
-                    </div>
+        // Load channel videos from YouTube API
+        async function loadChannelVideos() {
+            try {
+                // First, search for videos
+                const searchParams = {
+                    part: 'snippet',
+                    channelId: TOMO_ACADEMY_CHANNEL_ID,
+                    maxResults: 50,
+                    order: 'date',
+                    type: 'video'
+                };
 
-                    <div class="flex items-center ${roleColor} font-medium">
-                        <span>View Profile</span>
-                        <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-default"></i>
+                const searchData = await cachedFetch('search', searchParams, `search_${TOMO_ACADEMY_CHANNEL_ID}`);
+                
+                const videoIds = searchData.items.map(item => item.id.videoId).join(',');
+                
+                // Get video details including statistics
+                const detailsParams = {
+                    part: 'snippet,statistics,contentDetails',
+                    id: videoIds
+                };
+                
+                const detailsData = await cachedFetch('videos', detailsParams, `videos_${videoIds}`);
+                
+                const videos = [];
+                
+                for (const item of detailsData.items) {
+                    const duration = parseDuration(item.contentDetails.duration);
+                    const video = {
+                        id: item.id,
+                        title: item.snippet.title,
+                        description: item.snippet.description,
+                        thumbnailUrl: item.snippet.thumbnails.high.url,
+                        videoUrl: `https://www.youtube.com/watch?v=${item.id}`,
+                        publishedAt: new Date(item.snippet.publishedAt),
+                        isSeries: false,
+                        isFeatured: false,
+                        subject: extractSubjectFromTitle(item.snippet.title),
+                        difficulty: extractDifficultyFromTitle(item.snippet.title),
+                        type: extractTypeFromTitle(item.snippet.title),
+                        duration: duration,
+                        views: parseInt(item.statistics.viewCount),
+                        rating: 0, // Will be calculated from comments
+                        ratingCount: 0,
+                        tags: extractTagsFromDescription(item.snippet.description),
+                        likeCount: parseInt(item.statistics.likeCount || 0),
+                        commentCount: parseInt(item.statistics.commentCount || 0)
+                    };
+                    
+                    videos.push(video);
+                }
+                
+                return videos;
+            } catch (error) {
+                console.error("Error loading videos: ", error);
+                return [];
+            }
+        }
+
+        // Load playlist items
+        async function loadPlaylistItems(playlistId) {
+            try {
+                const params = {
+                    part: 'snippet,contentDetails',
+                    playlistId: playlistId,
+                    maxResults: 50
+                };
+
+                const data = await cachedFetch('playlistItems', params, `playlistItems_${playlistId}`);
+                
+                const items = [];
+                let totalDuration = 0;
+                let totalViews = 0;
+                
+                // Get video IDs for statistics
+                const videoIds = data.items.map(item => item.contentDetails.videoId).join(',');
+                
+                if (videoIds) {
+                    // Get video details
+                    const detailsParams = {
+                        part: 'statistics,contentDetails',
+                        id: videoIds
+                    };
+                    
+                    const detailsData = await cachedFetch('videos', detailsParams, `videos_${videoIds}`);
+                    
+                    const videoDetails = {};
+                    for (const item of detailsData.items) {
+                        videoDetails[item.id] = {
+                            duration: parseDuration(item.contentDetails.duration),
+                            views: parseInt(item.statistics.viewCount)
+                        };
+                    }
+                    
+                    // Process playlist items
+                    for (const item of data.items) {
+                        const videoId = item.contentDetails.videoId;
+                        const details = videoDetails[videoId];
+                        
+                        if (details) {
+                            totalDuration += details.duration;
+                            totalViews += details.views;
+                            
+                            items.push({
+                                id: videoId,
+                                title: item.snippet.title,
+                                description: item.snippet.description,
+                                thumbnailUrl: item.snippet.thumbnails.high.url,
+                                videoUrl: `https://www.youtube.com/watch?v=${videoId}`,
+                                position: item.snippet.position,
+                                duration: details.duration,
+                                views: details.views
+                            });
+                        }
+                    }
+                }
+                
+                return {
+                    items: items,
+                    totalDuration: totalDuration,
+                    totalViews: totalViews
+                };
+            } catch (error) {
+                console.error("Error loading playlist items: ", error);
+                return {
+                    items: [],
+                    totalDuration: 0,
+                    totalViews: 0
+                };
+            }
+        }
+
+        // Load video comments
+        async function loadVideoComments(videoId) {
+            try {
+                const params = {
+                    part: 'snippet',
+                    videoId: videoId,
+                    maxResults: 10,
+                    order: 'relevance'
+                };
+
+                const data = await cachedFetch('commentThreads', params, `comments_${videoId}`);
+                
+                const comments = [];
+                
+                for (const item of data.items) {
+                    const comment = item.snippet.topLevelComment.snippet;
+                    
+                    comments.push({
+                        id: item.id,
+                        author: comment.authorDisplayName,
+                        authorAvatar: comment.authorProfileImageUrl,
+                        text: comment.textDisplay,
+                        publishedAt: new Date(comment.publishedAt),
+                        likeCount: comment.likeCount
+                    });
+                }
+                
+                return comments;
+            } catch (error) {
+                console.error("Error loading comments: ", error);
+                return [];
+            }
+        }
+
+        // Parse ISO 8601 duration to minutes
+        function parseDuration(duration) {
+            const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+            
+            let hours = 0;
+            let minutes = 0;
+            let seconds = 0;
+            
+            if (match[1]) hours = parseInt(match[1].replace('H', ''));
+            if (match[2]) minutes = parseInt(match[2].replace('M', ''));
+            if (match[3]) seconds = parseInt(match[3].replace('S', ''));
+            
+            return hours * 60 + minutes + Math.ceil(seconds / 60);
+        }
+
+        // Extract subject from title
+        function extractSubjectFromTitle(title) {
+            const titleLower = title.toLowerCase();
+            
+            if (titleLower.includes('math') || titleLower.includes('calculus') || titleLower.includes('algebra')) {
+                return 'mathematics';
+            } else if (titleLower.includes('physics') || titleLower.includes('quantum')) {
+                return 'physics';
+            } else if (titleLower.includes('chemistry') || titleLower.includes('organic')) {
+                return 'chemistry';
+            } else if (titleLower.includes('biology') || titleLower.includes('cell')) {
+                return 'biology';
+            } else if (titleLower.includes('computer') || titleLower.includes('programming') || titleLower.includes('python')) {
+                return 'computer-science';
+            } else if (titleLower.includes('business') || titleLower.includes('marketing')) {
+                return 'business';
+            } else if (titleLower.includes('english') || titleLower.includes('literature') || titleLower.includes('shakespeare')) {
+                return 'english';
+            } else if (titleLower.includes('history') || titleLower.includes('war')) {
+                return 'history';
+            }
+            
+            return 'general';
+        }
+
+        // Extract difficulty from title
+        function extractDifficultyFromTitle(title) {
+            const titleLower = title.toLowerCase();
+            
+            if (titleLower.includes('beginner') || titleLower.includes('introduction') || titleLower.includes('basics')) {
+                return 'beginner';
+            } else if (titleLower.includes('advanced') || titleLower.includes('master') || titleLower.includes('deep dive')) {
+                return 'advanced';
+            }
+            
+            return 'intermediate';
+        }
+
+        // Extract type from title
+        function extractTypeFromTitle(title) {
+            const titleLower = title.toLowerCase();
+            
+            if (titleLower.includes('exam') || titleLower.includes('test') || titleLower.includes('prep')) {
+                return 'exam-prep';
+            } else if (titleLower.includes('tutorial') || titleLower.includes('how to')) {
+                return 'tutorial';
+            } else if (titleLower.includes('guide') || titleLower.includes('notes')) {
+                return 'study-guide';
+            }
+            
+            return 'lecture';
+        }
+
+        // Extract tags from description
+        function extractTagsFromDescription(description) {
+            if (!description) return [];
+            
+            // Extract hashtags
+            const hashtags = description.match(/#\w+/g) || [];
+            
+            // Extract common keywords
+            const keywords = ['education', 'learning', 'study', 'tutorial', 'lecture', 'course'];
+            const foundKeywords = keywords.filter(keyword => 
+                description.toLowerCase().includes(keyword)
+            );
+            
+            return [...hashtags, ...foundKeywords];
+        }
+
+        // Load statistics from Firestore
+        async function loadStatistics() {
+            try {
+                // Try to get statistics from Firestore first
+                const statsSnapshot = await db.collection('statistics').doc('global').get();
+                const stats = statsSnapshot.data();
+                
+                if (stats) {
+                    document.getElementById('video-count').textContent = stats.videoCount || '500+';
+                    document.getElementById('monthly-views').textContent = stats.monthlyViews || '50,000+';
+                    document.getElementById('total-videos').textContent = stats.totalVideos || '500+';
+                    document.getElementById('subject-count').textContent = stats.subjectCount || '15';
+                    document.getElementById('total-views').textContent = stats.totalViews || '50K+';
+                    document.getElementById('satisfaction-rate').textContent = stats.satisfactionRate || '98%';
+                    document.getElementById('active-learners').textContent = stats.activeLearners || '25,000+';
+                    document.getElementById('study-groups').textContent = stats.studyGroups || '1,200+';
+                    document.getElementById('daily-discussions').textContent = stats.dailyDiscussions || '500+';
+                    document.getElementById('success-rate').textContent = stats.successRate || '95%';
+                } else {
+                    // Calculate statistics from loaded content
+                    const totalVideos = allContent.length;
+                    const totalViews = allContent.reduce((sum, item) => sum + (item.views || 0), 0);
+                    
+                    document.getElementById('video-count').textContent = totalVideos;
+                    document.getElementById('total-videos').textContent = totalVideos;
+                    document.getElementById('total-views').textContent = formatNumber(totalViews);
+                    
+                    // Count unique subjects
+                    const subjects = new Set(allContent.map(item => item.subject));
+                    document.getElementById('subject-count').textContent = subjects.size;
+                }
+            } catch (error) {
+                console.error("Error loading statistics: ", error);
+            }
+        }
+
+        // Load community activity from Firestore
+        async function loadCommunityActivity() {
+            try {
+                const activitySnapshot = await db.collection('communityActivity')
+                    .orderBy('timestamp', 'desc')
+                    .limit(3)
+                    .get();
+                
+                const activityContainer = document.getElementById('community-activity');
+                activityContainer.innerHTML = '';
+                
+                activitySnapshot.forEach(doc => {
+                    const activity = doc.data();
+                    const activityElement = document.createElement('div');
+                    activityElement.className = 'flex items-center space-x-3';
+                    
+                    activityElement.innerHTML = `
+                        <img src="${activity.userAvatar || 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg'}" 
+                             alt="${activity.userName}" 
+                             class="w-8 h-8 rounded-full object-cover" 
+                             onerror="this.src='https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg'; this.onerror=null;" />
+                        <div class="flex-1">
+                            <div class="text-sm text-text-primary"><strong>${activity.userName}</strong> ${activity.action}</div>
+                            <div class="text-xs text-text-secondary">${formatTimestamp(activity.timestamp)}</div>
+                        </div>
+                    `;
+                    
+                    activityContainer.appendChild(activityElement);
+                });
+            } catch (error) {
+                console.error("Error loading community activity: ", error);
+            }
+        }
+
+        // Load user progress from Firestore
+        async function loadUserProgress(userId) {
+            try {
+                const progressSnapshot = await db.collection('userProgress').doc(userId).get();
+                userProgress = progressSnapshot.data() || {};
+                
+                updateProgressSection();
+                loadRecommendations();
+            } catch (error) {
+                console.error("Error loading user progress: ", error);
+            }
+        }
+
+        // Update progress section
+        function updateProgressSection() {
+            if (currentUser && userProgress) {
+                const watchedVideos = userProgress.watchedVideos || [];
+                const totalVideos = allContent.length;
+                const progressPercentage = totalVideos > 0 ? Math.round((watchedVideos.length / totalVideos) * 100) : 0;
+                const studyStreak = userProgress.studyStreak || 0;
+                const dailyGoal = userProgress.dailyGoal || 2;
+                const dailyProgress = userProgress.dailyProgress || 0;
+                
+                document.getElementById('videos-watched').textContent = `${watchedVideos.length}/${totalVideos}`;
+                document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
+                document.getElementById('study-streak').textContent = `${studyStreak} days`;
+                document.getElementById('daily-goal').textContent = dailyGoal;
+                document.getElementById('daily-progress').textContent = dailyProgress;
+            } else {
+                document.getElementById('videos-watched').textContent = '0/0';
+                document.getElementById('progress-bar').style.width = '0%';
+                document.getElementById('study-streak').textContent = '0 days';
+                document.getElementById('daily-goal').textContent = '0';
+                document.getElementById('daily-progress').textContent = '0';
+            }
+        }
+
+        // Load personalized recommendations
+        async function loadRecommendations() {
+            if (!currentUser) return;
+            
+            try {
+                const recommendationsSnapshot = await db.collection('recommendations')
+                    .where('userId', '==', currentUser.uid)
+                    .orderBy('score', 'desc')
+                    .limit(2)
+                    .get();
+                
+                const recommendationsContainer = document.getElementById('recommendations-container');
+                recommendationsContainer.innerHTML = '';
+                
+                if (recommendationsSnapshot.empty) {
+                    recommendationsContainer.innerHTML = '<p class="text-text-secondary text-sm">Complete more videos to get personalized recommendations.</p>';
+                    return;
+                }
+                
+                recommendationsSnapshot.forEach(doc => {
+                    const recommendation = doc.data();
+                    const content = allContent.find(c => c.id === recommendation.contentId);
+                    
+                    if (content) {
+                        const recommendationElement = document.createElement('div');
+                        recommendationElement.className = 'flex items-center space-x-3';
+                        
+                        recommendationElement.innerHTML = `
+                            <img src="${content.thumbnailUrl}" 
+                                 alt="${content.title}" 
+                                 class="w-12 h-12 rounded object-cover" 
+                                 onerror="this.src='https://images.pexels.com/photos/3729557/pexels-photo-3729557.jpeg'; this.onerror=null;" />
+                            <div class="flex-1">
+                                <div class="font-medium text-text-primary text-sm">${content.title}</div>
+                                <div class="text-xs text-text-secondary">${recommendation.reason}</div>
+                            </div>
+                        `;
+                        
+                        recommendationElement.addEventListener('click', () => {
+                            openContent(content);
+                        });
+                        
+                        recommendationsContainer.appendChild(recommendationElement);
+                    }
+                });
+            } catch (error) {
+                console.error("Error loading recommendations: ", error);
+            }
+        }
+
+        // Apply filters to content
+        function applyFilters() {
+            const subjectFilter = document.getElementById('subject-filter').value;
+            const difficultyFilter = document.getElementById('difficulty-filter').value;
+            const typeFilter = document.getElementById('type-filter').value;
+            const durationFilter = document.getElementById('duration-filter').value;
+            const searchInput = document.getElementById('search-input').value.toLowerCase();
+            
+            // Filter content based on selected filters
+            filteredContent = allContent.filter(item => {
+                // Subject filter
+                if (subjectFilter && item.subject !== subjectFilter) return false;
+                
+                // Difficulty filter
+                if (difficultyFilter && item.difficulty !== difficultyFilter) return false;
+                
+                // Type filter
+                if (typeFilter && item.type !== typeFilter) return false;
+                
+                // Duration filter
+                if (durationFilter) {
+                    if (durationFilter === 'short' && item.duration >= 10) return false;
+                    if (durationFilter === 'medium' && (item.duration < 10 || item.duration > 30)) return false;
+                    if (durationFilter === 'long' && item.duration <= 30) return false;
+                }
+                
+                // Search filter
+                if (searchInput) {
+                    const searchableText = `${item.title} ${item.description} ${item.subject} ${item.tags?.join(' ') || ''}`.toLowerCase();
+                    if (!searchableText.includes(searchInput)) return false;
+                }
+                
+                return true;
+            });
+            
+            // Separate featured series and latest videos
+            const featuredSeries = filteredContent.filter(item => item.isFeatured && item.isSeries);
+            const latestVideos = filteredContent
+                .filter(item => !item.isSeries)
+                .sort((a, b) => b.publishedAt - a.publishedAt)
+                .slice(0, 6);
+            
+            // Render content
+            renderContent('featured-series', featuredSeries, true);
+            renderContent('latest-videos', latestVideos, false);
+            
+            // Show/hide containers based on content availability
+            document.getElementById('featured-series-container').classList.toggle('hidden', featuredSeries.length === 0);
+            document.getElementById('latest-videos-container').classList.toggle('hidden', latestVideos.length === 0);
+            
+            // Show/hide no results message
+            document.getElementById('no-results').classList.toggle('hidden', filteredContent.length > 0);
+        }
+
+        // Render content cards
+        function renderContent(containerId, contentItems, isSeries) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            if (contentItems.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-center text-text-secondary">No ${isSeries ? 'featured series' : 'videos'} found.</p>`;
+                return;
+            }
+            
+            contentItems.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card group hover:scale-105 transition-premium cursor-pointer';
+                card.setAttribute('data-subject', item.subject);
+                card.setAttribute('data-difficulty', item.difficulty);
+                card.setAttribute('data-type', item.type);
+                
+                // Duration category
+                let durationCategory = '';
+                if (item.duration < 10) durationCategory = 'short';
+                else if (item.duration <= 30) durationCategory = 'medium';
+                else durationCategory = 'long';
+                card.setAttribute('data-duration', durationCategory);
+                
+                // Badge for series or video
+                const badge = isSeries ? 
+                    `<div class="absolute top-3 left-3 bg-primary text-white px-2 py-1 rounded text-xs font-medium">Series</div>` : 
+                    '';
+                
+                // Video count or duration
+                const videoInfo = isSeries ? 
+                    `<div class="absolute top-3 right-3 bg-black bg-opacity-75 text-white px-2 py-1 rounded text-xs">${item.videoCount} Videos</div>` :
+                    `<div class="absolute top-3 right-3 bg-black bg-opacity-75 text-white px-2 py-1 rounded text-xs">${formatDuration(item.duration)}</div>`;
+                
+                // Subject and difficulty badges
+                const subjectBadge = `<span class="bg-${getSubjectColor(item.subject)}-100 text-${getSubjectColor(item.subject)} px-2 py-1 rounded text-xs font-medium">${capitalizeFirst(item.subject)}</span>`;
+                const difficultyBadge = `<span class="bg-${getDifficultyColor(item.difficulty)}-100 text-${getDifficultyColor(item.difficulty)} px-2 py-1 rounded text-xs font-medium">${capitalizeFirst(item.difficulty)}</span>`;
+                
+                // Rating
+                const rating = item.rating ? 
+                    `<div class="flex items-center text-sm text-success">
+                       <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                       </svg>
+                       ${item.rating} (${item.ratingCount ? formatNumber(item.ratingCount) : '0'})
+                     </div>` : '';
+                
+                // Additional info
+                const additionalInfo = isSeries ? 
+                    `<div class="flex items-center text-sm text-text-secondary">
+                       <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                       </svg>
+                       ${formatDuration(item.duration * item.videoCount)} total
+                     </div>` :
+                    `<div class="flex items-center justify-between text-sm text-text-secondary">
+                       <span>${formatTimestamp(item.publishedAt)}</span>
+                       <span>${formatNumber(item.views)} views</span>
+                     </div>`;
+                
+                card.innerHTML = `
+                  <div class="relative mb-4">
+                    <img src="${item.thumbnailUrl}" alt="${item.title}" class="w-full ${isSeries ? 'h-48' : 'h-40'} object-cover rounded-lg" onerror="this.src='https://images.pexels.com/photos/3729557/pexels-photo-3729557.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'; this.onerror=null;" />
+                    ${badge}
+                    ${videoInfo}
+                  </div>
+                  <div class="flex items-center gap-2 mb-2">
+                    ${subjectBadge}
+                    ${difficultyBadge}
+                  </div>
+                  <h4 class="text-lg font-inter font-semibold text-text-primary mb-2">${item.title}</h4>
+                  <p class="text-text-secondary mb-4">${item.description}</p>
+                  <div class="flex items-center justify-between">
+                    ${isSeries ? additionalInfo : ''}
+                    ${rating}
+                  </div>
+                `;
+                
+                card.addEventListener('click', () => {
+                    openContent(item);
+                });
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Open content (video or series)
+        async function openContent(content) {
+            // Track content view
+            if (currentUser) {
+                trackContentView(content.id);
+            }
+            
+            if (content.isSeries) {
+                // Load playlist items if not already loaded
+                if (!content.playlistItems || content.playlistItems.length === 0) {
+                    const playlistData = await loadPlaylistItems(content.id);
+                    content.playlistItems = playlistData.items;
+                    content.duration = playlistData.totalDuration / content.videoCount;
+                    content.views = playlistData.totalViews;
+                }
+                
+                // Show series details
+                showSeriesDetails(content);
+            } else {
+                // Open video in modal
+                openYouTubeModal(content);
+            }
+        }
+
+        // Show series details
+        function showSeriesDetails(series) {
+            // Create modal element
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+              <div class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="p-6">
+                  <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-2xl font-bold text-text-primary">${series.title}</h3>
+                    <button onclick="this.closest('.fixed').remove()" class="text-text-secondary hover:text-text-primary">
+                      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  <div class="mb-4">
+                    <img src="${series.thumbnailUrl}" alt="${series.title}" class="w-full h-64 object-cover rounded-lg" onerror="this.src='https://images.pexels.com/photos/3729557/pexels-photo-3729557.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'; this.onerror=null;" />
+                  </div>
+                  
+                  <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="bg-${getSubjectColor(series.subject)}-100 text-${getSubjectColor(series.subject)} px-3 py-1 rounded-full text-sm font-medium">${capitalizeFirst(series.subject)}</span>
+                    <span class="bg-${getDifficultyColor(series.difficulty)}-100 text-${getDifficultyColor(series.difficulty)} px-3 py-1 rounded-full text-sm font-medium">${capitalizeFirst(series.difficulty)}</span>
+                    <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium">${capitalizeFirst(series.type)}</span>
+                    <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium">${series.videoCount} Videos</span>
+                    <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium">${formatDuration(series.duration * series.videoCount)}</span>
+                  </div>
+                  
+                  <p class="text-text-secondary mb-6">${series.description}</p>
+                  
+                  <div class="mb-6">
+                    <h4 class="text-lg font-semibold text-text-primary mb-3">Series Videos</h4>
+                    <div class="space-y-3">
+                      ${series.playlistItems.map((item, index) => `
+                        <div class="flex items-center p-3 bg-surface rounded-lg hover:bg-gray-100 transition-default cursor-pointer" onclick="openYouTubeModal({id: '${item.id}', title: '${item.title.replace(/'/g, "\\'")}', description: '${item.description.replace(/'/g, "\\'")}', thumbnailUrl: '${item.thumbnailUrl}', videoUrl: '${item.videoUrl}', duration: ${item.duration}, views: ${item.views}})">
+                          <div class="flex-shrink-0 w-16 h-16 bg-gray-200 rounded flex items-center justify-center text-text-secondary font-medium">
+                            ${index + 1}
+                          </div>
+                          <div class="ml-3 flex-1">
+                            <div class="font-medium text-text-primary">${item.title}</div>
+                            <div class="text-xs text-text-secondary">${formatDuration(item.duration)} • ${formatNumber(item.views)} views</div>
+                          </div>
+                          <div class="flex-shrink-0">
+                            <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
+                      `).join('')}
                     </div>
+                  </div>
+                  
+                  <div class="flex gap-3">
+                    <button onclick="this.closest('.fixed').remove()" class="btn-secondary flex-1">Close</button>
+                  </div>
                 </div>
+              </div>
             `;
             
-            return card;
+            document.body.appendChild(modal);
         }
 
-        // Mobile menu toggle
+        // Open YouTube modal with video
+        async function openYouTubeModal(video) {
+            currentVideoId = video.id;
+            
+            // Set modal title
+            document.getElementById('modal-title').textContent = video.title;
+            
+            // Show modal
+            document.getElementById('youtube-modal').classList.remove('hidden');
+            
+            // Create YouTube player
+            if (youtubePlayer) {
+                youtubePlayer.destroy();
+            }
+            
+            youtubePlayer = new YT.Player('youtube-player', {
+                height: '100%',
+                width: '100%',
+                videoId: video.id,
+                playerVars: {
+                    'playsinline': 1,
+                    'rel': 0,
+                    'modestbranding': 1
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+            
+            // Load video details
+            loadVideoDetails(video);
+            
+            // Load video comments
+            loadVideoCommentsSection(video.id);
+        }
+
+        // Close YouTube modal
+        function closeYouTubeModal() {
+            document.getElementById('youtube-modal').classList.add('hidden');
+            
+            if (youtubePlayer) {
+                youtubePlayer.stopVideo();
+            }
+            
+            currentVideoId = null;
+        }
+
+        // YouTube player ready event
+        function onPlayerReady(event) {
+            // Player is ready
+        }
+
+        // YouTube player state change event
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING && currentUser) {
+                // Track video play
+                trackVideoPlay(currentVideoId);
+            }
+        }
+
+        // Load video details in modal
+        async function loadVideoDetails(video) {
+            const detailsContainer = document.getElementById('video-details');
+            
+            detailsContainer.innerHTML = `
+              <div class="flex flex-wrap gap-2 mb-3">
+                <span class="bg-${getSubjectColor(video.subject)}-100 text-${getSubjectColor(video.subject)} px-3 py-1 rounded-full text-sm font-medium">${capitalizeFirst(video.subject)}</span>
+                <span class="bg-${getDifficultyColor(video.difficulty)}-100 text-${getDifficultyColor(video.difficulty)} px-3 py-1 rounded-full text-sm font-medium">${capitalizeFirst(video.difficulty)}</span>
+                <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium">${capitalizeFirst(video.type)}</span>
+                <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium">${formatDuration(video.duration)}</span>
+              </div>
+              
+              <p class="text-text-secondary mb-4">${video.description}</p>
+              
+              <div class="flex items-center justify-between text-sm">
+                <div class="flex items-center text-text-secondary">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  ${formatNumber(video.views)} views
+                </div>
+                <div class="flex items-center text-text-secondary">
+                  <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                  </svg>
+                  ${formatNumber(video.likeCount)} likes
+                </div>
+                <div class="flex items-center text-text-secondary">
+                  <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
+                  </svg>
+                  ${formatNumber(video.commentCount)} comments
+                </div>
+              </div>
+            `;
+        }
+
+        // Load video comments section
+        async function loadVideoCommentsSection(videoId) {
+            const commentsContainer = document.getElementById('video-comments');
+            
+            commentsContainer.innerHTML = `
+              <h4 class="text-lg font-semibold text-text-primary mb-3">Comments</h4>
+              <div class="text-center py-4">
+                <svg class="animate-spin h-8 w-8 text-primary mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p class="mt-2 text-text-secondary">Loading comments...</p>
+              </div>
+            `;
+            
+            try {
+                const comments = await loadVideoComments(videoId);
+                
+                if (comments.length === 0) {
+                    commentsContainer.innerHTML = `
+                      <h4 class="text-lg font-semibold text-text-primary mb-3">Comments</h4>
+                      <p class="text-text-secondary">No comments yet. Be the first to comment!</p>
+                    `;
+                    return;
+                }
+                
+                commentsContainer.innerHTML = `
+                  <h4 class="text-lg font-semibold text-text-primary mb-3">Comments (${comments.length})</h4>
+                  <div class="space-y-4">
+                    ${comments.map(comment => `
+                      <div class="flex space-x-3">
+                        <img src="${comment.authorAvatar}" alt="${comment.author}" class="w-10 h-10 rounded-full object-cover" onerror="this.src='https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg'; this.onerror=null;" />
+                        <div class="flex-1">
+                          <div class="bg-surface p-3 rounded-lg">
+                            <div class="flex justify-between items-center mb-1">
+                              <div class="font-medium text-text-primary">${comment.author}</div>
+                              <div class="text-xs text-text-secondary">${formatTimestamp(comment.publishedAt)}</div>
+                            </div>
+                            <div class="text-text-secondary">${comment.text}</div>
+                          </div>
+                          <div class="flex items-center mt-1 text-xs text-text-secondary">
+                            <button class="flex items-center hover:text-primary transition-default">
+                              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905a3.61 3.61 0 01-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
+                              </svg>
+                              ${comment.likeCount}
+                            </button>
+                            <button class="flex items-center ml-4 hover:text-primary transition-default">
+                              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                              </svg>
+                              Reply
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    `).join('')}
+                  </div>
+                `;
+            } catch (error) {
+                console.error("Error loading comments: ", error);
+                commentsContainer.innerHTML = `
+                  <h4 class="text-lg font-semibold text-text-primary mb-3">Comments</h4>
+                  <p class="text-text-secondary">Failed to load comments. Please try again later.</p>
+                `;
+            }
+        }
+
+        // Track content view in Firestore
+        async function trackContentView(contentId) {
+            if (!currentUser) return;
+            
+            try {
+                // Add to user history
+                await db.collection('userHistory').add({
+                    userId: currentUser.uid,
+                    contentId: contentId,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Update user progress if not already watched
+                if (!userProgress.watchedVideos || !userProgress.watchedVideos.includes(contentId)) {
+                    const watchedVideos = userProgress.watchedVideos || [];
+                    watchedVideos.push(contentId);
+                    
+                    await db.collection('userProgress').doc(currentUser.uid).update({
+                        watchedVideos: watchedVideos,
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    // Reload user progress
+                    loadUserProgress(currentUser.uid);
+                }
+            } catch (error) {
+                console.error("Error tracking content view: ", error);
+            }
+        }
+
+        // Track video play in Firestore
+        async function trackVideoPlay(videoId) {
+            if (!currentUser) return;
+            
+            try {
+                // Update daily progress
+                const dailyProgress = userProgress.dailyProgress || 0;
+                await db.collection('userProgress').doc(currentUser.uid).update({
+                    dailyProgress: dailyProgress + 1,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Reload user progress
+                loadUserProgress(currentUser.uid);
+            } catch (error) {
+                console.error("Error tracking video play: ", error);
+            }
+        }
+
+        // Reset all filters
+        function resetFilters() {
+            document.getElementById('subject-filter').value = '';
+            document.getElementById('difficulty-filter').value = '';
+            document.getElementById('type-filter').value = '';
+            document.getElementById('duration-filter').value = '';
+            document.getElementById('search-input').value = '';
+            
+            applyFilters();
+        }
+
+        // Show loading indicator
+        function showLoadingIndicator() {
+            document.getElementById('loading-indicator').classList.remove('hidden');
+            document.getElementById('featured-series-container').classList.add('hidden');
+            document.getElementById('latest-videos-container').classList.add('hidden');
+            document.getElementById('no-results').classList.add('hidden');
+        }
+
+        // Hide loading indicator
+        function hideLoadingIndicator() {
+            document.getElementById('loading-indicator').classList.add('hidden');
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorElement = document.createElement('div');
+            errorElement.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4';
+            errorElement.textContent = message;
+            
+            const contentResults = document.getElementById('content-results');
+            contentResults.insertBefore(errorElement, contentResults.firstChild);
+            
+            setTimeout(() => {
+                errorElement.remove();
+            }, 5000);
+        }
+
+        // Format duration in minutes to readable format
+        function formatDuration(minutes) {
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+        }
+
+        // Format timestamp to readable format
+        function formatTimestamp(timestamp) {
+            if (!timestamp) return 'Unknown date';
+            
+            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 0) return 'Today';
+            if (diffDays === 1) return 'Yesterday';
+            if (diffDays < 7) return `${diffDays} days ago`;
+            if (diffDays < 30) return `${Math.floor(diffDays/7)} weeks ago`;
+            return `${Math.floor(diffDays/30)} months ago`;
+        }
+
+        // Format number with K/M suffixes
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        // Capitalize first letter of a string
+        function capitalizeFirst(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Get color for subject
+        function getSubjectColor(subject) {
+            const colors = {
+                'mathematics': 'primary',
+                'physics': 'secondary',
+                'chemistry': 'success',
+                'biology': 'success',
+                'computer-science': 'primary',
+                'business': 'secondary',
+                'english': 'accent',
+                'history': 'primary'
+            };
+            return colors[subject] || 'primary';
+        }
+
+        // Get color for difficulty
+        function getDifficultyColor(difficulty) {
+            const colors = {
+                'beginner': 'success',
+                'intermediate': 'accent',
+                'advanced': 'error'
+            };
+            return colors[difficulty] || 'accent';
+        }
+
+        // Toggle mobile menu
         function toggleMobileMenu() {
             const mobileMenu = document.getElementById('mobile-menu');
             mobileMenu.classList.toggle('hidden');
         }
 
-        // Smooth scroll to team section
-        function scrollToTeam() {
-            document.getElementById('team-section').scrollIntoView({ 
+        // Scroll to content section
+        function scrollToContent() {
+            document.getElementById('content-section').scrollIntoView({ 
                 behavior: 'smooth' 
             });
         }
 
-        // Set view mode (grid or list)
-        function setViewMode(mode) {
-            viewMode = mode;
-            const gridBtn = document.getElementById('gridViewBtn');
-            const listBtn = document.getElementById('listViewBtn');
-            const teamGrid = document.getElementById('teamGrid');
-            
-            if (mode === 'grid') {
-                gridBtn.classList.add('bg-primary', 'text-white', 'border-primary');
-                gridBtn.classList.remove('text-text-secondary', 'bg-white', 'border-gray-200');
-                listBtn.classList.remove('bg-primary', 'text-white', 'border-primary');
-                listBtn.classList.add('text-text-secondary', 'bg-white', 'border-gray-200');
-                teamGrid.className = 'grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8';
-            } else {
-                listBtn.classList.add('bg-primary', 'text-white', 'border-primary');
-                listBtn.classList.remove('text-text-secondary', 'bg-white', 'border-gray-200');
-                gridBtn.classList.remove('bg-primary', 'text-white', 'border-primary');
-                gridBtn.classList.add('text-text-secondary', 'bg-white', 'border-gray-200');
-                teamGrid.className = 'grid grid-cols-1 gap-6';
-            }
-            
-            // Re-apply current filter
-            filterTeam();
-        }
-
-        // Filter functionality
-        function filterTeam() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const roleFilter = document.getElementById('roleFilter').value;
-            const subjectFilter = document.getElementById('subjectFilter').value;
-            const teamCards = document.querySelectorAll('.team-member-card');
-
-            teamCards.forEach(card => {
-                const name = card.querySelector('h3').textContent.toLowerCase();
-                const role = card.getAttribute('data-role');
-                const subject = card.getAttribute('data-subject');
-                const bio = card.querySelector('p:nth-of-type(2)').textContent.toLowerCase();
-
-                const matchesSearch = name.includes(searchTerm) || bio.includes(searchTerm) || subject.toLowerCase().includes(searchTerm);
-                const matchesRole = !roleFilter || role === roleFilter;
-                const matchesSubject = !subjectFilter || subject === subjectFilter;
-
-                if (matchesSearch && matchesRole && matchesSubject) {
-                    card.style.display = 'block';
-                    // Add highlight for search term
-                    if (searchTerm) {
-                        highlightSearchTerm(card, searchTerm);
-                    } else {
-                        removeSearchHighlight(card);
-                    }
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-
-        // Highlight search term
-        function highlightSearchTerm(card, term) {
-            const elements = card.querySelectorAll('h3, p');
-            elements.forEach(el => {
-                const text = el.textContent;
-                const regex = new RegExp(`(${term})`, 'gi');
-                el.innerHTML = text.replace(regex, '<span class="search-highlight">$1</span>');
-            });
-        }
-
-        // Remove search highlight
-        function removeSearchHighlight(card) {
-            const elements = card.querySelectorAll('h3, p');
-            elements.forEach(el => {
-                el.innerHTML = el.textContent;
-            });
-        }
-
-        // Filter by availability
-        function filterByAvailability(availability) {
-            const teamCards = document.querySelectorAll('.team-member-card');
-            
-            teamCards.forEach(card => {
-                const cardAvailability = card.getAttribute('data-availability');
-                
-                if (availability === 'available' && cardAvailability === 'available') {
-                    card.style.display = 'block';
-                } else if (availability === 'mentoring' && cardAvailability === 'mentoring') {
-                    card.style.display = 'block';
-                } else if (availability === 'recent' && cardAvailability === 'recent') {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-            
-            // Update filter button states
-            document.querySelectorAll('.filter-tag').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-        }
-
-        // Clear all filters
-        function clearFilters() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('roleFilter').value = '';
-            document.getElementById('subjectFilter').value = '';
-            
-            const teamCards = document.querySelectorAll('.team-member-card');
-            teamCards.forEach(card => {
-                card.style.display = 'block';
-                removeSearchHighlight(card);
-            });
-            
-            // Update filter button states
-            document.querySelectorAll('.filter-tag').forEach(btn => {
-                btn.classList.remove('active');
-            });
-        }
-
-        // Load more members (placeholder)
-        function loadMoreMembers() {
-            showToast('All team members are already loaded!', 'info');
-        }
-
-        // Switch tab in modal
-        function switchTab(tabName) {
-            currentTab = tabName;
-            
-            // Update tab buttons
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                btn.classList.remove('active', 'text-primary');
-                btn.classList.add('text-text-secondary');
-            });
-            event.target.classList.add('active', 'text-primary');
-            event.target.classList.remove('text-text-secondary');
-            
-            // Update tab content
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.add('hidden');
-            });
-            document.getElementById(`${tabName}Tab`).classList.remove('hidden');
-            
-            // If ID Card tab is selected, generate the ID card
-            if (tabName === 'idcard' && currentMember) {
-                generateIdCard(currentMember);
-            }
-        }
-
-        // Member modal functionality
-        function openMemberModal(memberId) {
-            // Find member in teamMembers array
-            currentMember = teamMembers.find(member => member.id === memberId);
-            if (!currentMember) return;
-
-            // Populate modal content
-            document.getElementById('modalImage').src = currentMember.image;
-            document.getElementById('modalImage').alt = currentMember.name;
-            document.getElementById('modalName').textContent = currentMember.name;
-            document.getElementById('modalRole').textContent = currentMember.role;
-            
-            const availabilityClass = currentMember.availability === 'available' ? 'bg-success text-white' :
-                                     currentMember.availability === 'mentoring' ? 'bg-primary text-white' :
-                                     'bg-accent text-white';
-            
-            const availabilityEl = document.getElementById('modalAvailability');
-            availabilityEl.textContent = currentMember.availability.charAt(0).toUpperCase() + currentMember.availability.slice(1);
-            availabilityEl.className = `inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${availabilityClass}`;
-            
-            document.getElementById('modalBio').textContent = currentMember.bio;
-            document.getElementById('modalEducation').textContent = currentMember.education;
-            document.getElementById('modalVideos').textContent = currentMember.videos;
-            document.getElementById('modalRating').textContent = currentMember.rating + '/5';
-            document.getElementById('modalStudents').textContent = currentMember.students.toLocaleString() + '+';
-            document.getElementById('modalExperience').textContent = currentMember.experience;
-            document.getElementById('modalEmail').textContent = currentMember.email;
-            document.getElementById('modalAvailabilityHours').textContent = currentMember.availabilityHours;
-            document.getElementById('modalLocation').textContent = currentMember.location;
-
-            // Populate expertise tags
-            const expertiseEl = document.getElementById('modalExpertise');
-            expertiseEl.innerHTML = '';
-            currentMember.expertise.forEach(skill => {
-                const tag = document.createElement('span');
-                tag.className = 'skill-tag px-3 py-1 bg-primary-100 text-primary-600 rounded-full text-sm';
-                tag.textContent = skill;
-                expertiseEl.appendChild(tag);
-            });
-
-            // Populate contributions
-            const contributionsEl = document.getElementById('modalContributions');
-            contributionsEl.innerHTML = '';
-            currentMember.contributions.forEach(contribution => {
-                const item = document.createElement('div');
-                item.className = 'flex items-center p-3 bg-surface rounded-lg';
-                item.innerHTML = `
-                    <i class="fas fa-video text-primary mr-3 flex-shrink-0"></i>
-                    <span class="text-sm text-text-secondary">${contribution}</span>
-                `;
-                contributionsEl.appendChild(item);
-            });
-
-            // Populate content list
-            const contentListEl = document.getElementById('modalContentList');
-            contentListEl.innerHTML = '';
-            currentMember.content.forEach(item => {
-                const contentItem = document.createElement('div');
-                contentItem.className = 'flex items-center justify-between p-4 bg-surface rounded-lg';
-                contentItem.innerHTML = `
-                    <div class="flex items-center">
-                        <i class="fas fa-play-circle text-primary mr-4"></i>
-                        <div>
-                            <div class="font-medium text-text-primary">${item.title}</div>
-                            <div class="text-sm text-text-secondary">${item.duration} • ${formatDate(item.date)}</div>
-                        </div>
-                    </div>
-                    <div class="text-sm text-text-secondary">${item.views} views</div>
-                `;
-                contentListEl.appendChild(contentItem);
-            });
-
-            // Reset tab to about
-            currentTab = 'about';
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                btn.classList.remove('active', 'text-primary');
-                btn.classList.add('text-text-secondary');
-            });
-            document.querySelector('[onclick="switchTab(\'about\')"]').classList.add('active', 'text-primary');
-            document.querySelector('[onclick="switchTab(\'about\')"]').classList.remove('text-text-secondary');
-            
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.add('hidden');
-            });
-            document.getElementById('aboutTab').classList.remove('hidden');
-
-            // Show modal
-            document.getElementById('memberModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeMemberModal() {
-            document.getElementById('memberModal').classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Generate ID Card
-        function generateIdCard(member) {
-            document.getElementById('idCardName').textContent = member.name;
-            document.getElementById('idCardRole').textContent = member.role;
-            document.getElementById('idCardId').textContent = member.employeeId;
-            document.getElementById('idCardDepartment').textContent = member.department;
-            document.getElementById('idCardSince').textContent = member.since;
-            document.getElementById('idCardIdFooter').textContent = member.employeeId;
-            document.getElementById('idCardPhoto').src = member.image;
-            
-            // Generate QR code
-            const qrContainer = document.getElementById('idCardQr');
-            qrContainer.innerHTML = '';
-            
-            const qrData = `https://tomoacademy.com/team/${member.id}`;
-            new QRCode(qrContainer, {
-                text: qrData,
-                width: 40,
-                height: 40,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-        }
-
-        // Download ID Card
-        function downloadIdCard() {
-            showToast('ID Card download started!', 'success');
-            // In a real implementation, this would generate and download an image of the ID card
-        }
-
-        // Share ID Card
-        function shareIdCard() {
-            if (navigator.share) {
-                navigator.share({
-                    title: `${currentMember.name}'s ID Card`,
-                    text: `Check out ${currentMember.name}'s ID Card from Tomo Academy`,
-                    url: `https://tomoacademy.com/team/${currentMember.id}`
-                }).then(() => {
-                    showToast('ID Card shared successfully!', 'success');
-                }).catch((error) => {
-                    showToast('Error sharing ID Card', 'error');
-                });
-            } else {
-                // Fallback - copy to clipboard
-                const dummy = document.createElement('input');
-                document.body.appendChild(dummy);
-                dummy.value = `https://tomoacademy.com/team/${currentMember.id}`;
-                dummy.select();
-                document.execCommand('copy');
-                document.body.removeChild(dummy);
-                showToast('ID Card link copied to clipboard!', 'success');
-            }
-        }
-
-        // Format date for display
-        function formatDate(dateString) {
-            const options = { year: 'numeric', month: 'short', day: 'numeric' };
-            return new Date(dateString).toLocaleDateString(undefined, options);
-        }
-
-        // Show toast notification
-        function showToast(message, type = 'info') {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = 'toast-notification';
-            
-            // Set background color based on type
-            if (type === 'success') {
-                toast.classList.add('success');
-            } else if (type === 'error') {
-                toast.classList.add('error');
-            } else if (type === 'info') {
-                toast.classList.add('info');
-            }
-            
-            // Show toast
-            setTimeout(() => {
-                toast.classList.add('show');
-            }, 10);
-            
-            // Hide after 3 seconds
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
-        // Handle contact form submission
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const name = document.querySelector('#contactForm input[type="text"]').value;
-            const email = document.querySelector('#contactForm input[type="email"]').value;
-            const subject = document.querySelector('#contactForm input[type="text"]:nth-of-type(2)').value;
-            const message = document.querySelector('#contactForm textarea').value;
-            
-            // Save to Firestore
-            db.collection('contactMessages').add({
-                to: currentMember.email,
-                from: email,
-                name: name,
-                subject: subject,
-                message: message,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                showToast('Message sent successfully!', 'success');
-                e.target.reset();
-            }).catch(error => {
-                showToast('Error sending message. Please try again.', 'error');
-                console.error('Error sending message:', error);
-            });
-        });
-
-        // Close modal when clicking outside
-        document.getElementById('memberModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeMemberModal();
-            }
-        });
-
-        // Animate elements on scroll
+        // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize team members from Firebase
-            initializeTeamMembers();
+            // Load YouTube API
+            loadYouTubeAPI();
             
-            // Animate counters
-            const counters = document.querySelectorAll('.counter');
-            const speed = 200;
+            // Load content from YouTube API
+            loadContent();
             
-            const animateCounter = (counter) => {
-                const target = +counter.getAttribute('data-target');
-                const count = +counter.innerText;
-                const increment = target / speed;
-                
-                const updateCount = () => {
-                    const currentCount = +counter.innerText;
-                    
-                    if (currentCount < target) {
-                        counter.innerText = Math.ceil(currentCount + increment);
-                        setTimeout(updateCount, 1);
-                    } else {
-                        counter.innerText = target;
-                        
-                        // Add special formatting for certain counters
-                        if (target === 50) {
-                            counter.innerHTML = '50<span style="font-size: 0.6em">K+</span>';
-                        } else if (target === 15) {
-                            counter.innerHTML = '15<span style="font-size: 0.6em">+</span>';
-                        }
-                    }
-                };
-                
-                updateCount();
-            };
-            
-            // Use Intersection Observer to trigger counter animation when visible
+            // Add smooth scrolling and animations
             const observerOptions = {
-                threshold: 0.5,
+                threshold: 0.1,
                 rootMargin: '0px 0px -50px 0px'
             };
-            
+
             const observer = new IntersectionObserver(function(entries) {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        animateCounter(entry.target);
-                        observer.unobserve(entry.target);
+                        entry.target.classList.add('slide-up');
                     }
                 });
             }, observerOptions);
-            
-            counters.forEach(counter => {
-                observer.observe(counter);
-            });
-            
-            // Animate team member cards on scroll
-            const teamMemberObserver = new IntersectionObserver(function(entries) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        teamMemberObserver.unobserve(entry.target);
-                    }
-                });
-            }, {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            });
-            
-            document.querySelectorAll('.team-member-card').forEach(card => {
-                teamMemberObserver.observe(card);
-            });
-            
-            // Lazy load images
-            const lazyImages = document.querySelectorAll('.lazy-image');
-            const imageObserver = new IntersectionObserver(function(entries) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        img.classList.add('loaded');
-                        imageObserver.unobserve(img);
-                    }
-                });
-            });
-            
-            lazyImages.forEach(img => {
-                imageObserver.observe(img);
+
+            // Observe all cards and sections
+            document.querySelectorAll('.card, .card-surface').forEach(el => {
+                observer.observe(el);
             });
         });
     </script>
+    <script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
 </body>
 </html>
