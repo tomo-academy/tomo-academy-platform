@@ -3,83 +3,76 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tomo Academy Hub</title>
-    <link rel="stylesheet" href="css/main.css" />
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: white;
-        }
-        
-        .redirect-container {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .logo {
-            font-size: 3rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .loading-text {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-        
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #fff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .redirect-info {
-            font-size: 0.9rem;
-            opacity: 0.7;
-        }
-    </style>
-<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Ftomoacade7208back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
+    <title>Tomo Academy Hub - Transform Your Learning Journey</title>
+    <meta name="description" content="Join Tomo Academy to access world-class education, innovative learning tools, and a community of passionate learners." />
+    <link rel="stylesheet" href="/css/main.css" />
 </head>
-<body>
-    <div class="redirect-container">
-        <div class="logo">Tomo Academy Hub</div>
-        <div class="loading-text">Welcome! Redirecting to homepage...</div>
-        <div class="spinner"></div>
-        <div class="redirect-info">If you are not redirected automatically, <a href="pages/homepage.html" style="color: #4ecdc4;">click here</a></div>
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 min-h-screen">
+    <div class="fixed inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMDAwMDA4IiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-40"></div>
+
+    <div class="relative">
+        <div class="container mx-auto px-4 py-16 text-center">
+            <div class="animate-fade-in">
+                <div class="mb-8 inline-block">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary-600 to-secondary-600 rounded-2xl flex items-center justify-center shadow-xl transform hover:scale-110 transition-transform duration-300">
+                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    </div>
+                </div>
+
+                <h1 class="text-5xl lg:text-7xl font-bold text-text-primary mb-6 leading-tight">
+                    Welcome to <span class="bg-gradient-to-r from-primary-600 via-secondary-600 to-primary-600 text-transparent bg-clip-text">Tomo Academy</span>
+                </h1>
+
+                <p class="text-xl lg:text-2xl text-text-secondary mb-8 max-w-2xl mx-auto leading-relaxed">
+                    Transform your future with cutting-edge education, expert instructors, and a thriving learning community
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+                    <a href="/pages/homepage.html" class="group relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+                        <span>Explore Courses</span>
+                        <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </a>
+
+                    <a href="/pages/about.html" class="inline-flex items-center px-8 py-4 bg-white text-primary-700 font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 border-2 border-primary-100">
+                        Learn More
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="text-4xl font-bold text-primary-600 mb-2">15K+</div>
+                        <div class="text-sm text-text-secondary font-medium">Active Students</div>
+                    </div>
+
+                    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="text-4xl font-bold text-secondary-600 mb-2">120+</div>
+                        <div class="text-sm text-text-secondary font-medium">Courses</div>
+                    </div>
+
+                    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="text-4xl font-bold text-accent-600 mb-2">14</div>
+                        <div class="text-sm text-text-secondary font-medium">Expert Instructors</div>
+                    </div>
+
+                    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                        <div class="text-4xl font-bold text-success-600 mb-2">98%</div>
+                        <div class="text-sm text-text-secondary font-medium">Satisfaction Rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce-subtle">
+            <svg class="w-6 h-6 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+        </div>
     </div>
 
-    <script>
-        // Redirect to homepage after 2 seconds
-        setTimeout(function() {
-            window.location.href = 'pages/homepage.html';
-        }, 2000);
-    </script>
-<script id="dhws-dataInjector" src="/public/dhws-data-injector.js"></script>
+    <script type="module" src="/js/main.js"></script>
 </body>
 </html>
